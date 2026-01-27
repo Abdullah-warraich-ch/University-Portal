@@ -8,7 +8,7 @@ function Header() {
       <div className="text-3xl font-black">
         VU<span className="text-danger">.</span>
       </div>
-      <div className="text-2xl text-text-muted font-black">Admin Portal</div>
+      <div className="text-xl text-primary font-medium">Admin Portal</div>
       <div className="flex">
         <div className="flex justify-center items-center gap-5">
           <div className="">

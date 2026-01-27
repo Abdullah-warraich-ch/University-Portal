@@ -64,10 +64,10 @@ function Sidebar() {
         />
         <h4 className="text-text-primary font-black">Muhammad Abdullah</h4>
         <p className="text-text-muted text-xs font-medium">Admin</p>
-        <button className="w-full border border-border font-bold rounded-lg p-1">
+        <button className="w-full bg-primary font-bold rounded-lg p-1">
           Logout
         </button>
-        <p className="text-sm text-text-muted">
+        <p className="text-sm text-text-muted border border-border p-1 rounded-full mt-1">
           {" "}
           {new Date().toLocaleString("en-PK", {
             day: "2-digit",
