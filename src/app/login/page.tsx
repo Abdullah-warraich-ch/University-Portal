@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { auth, db } from "@/../src/app/Firebase";
-import React from "react";
+import React, { useEffect } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,24 @@ export default function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    const role = document.cookie
+      .split(";")
+      .find((row: string) => row.trim().startsWith("role="))
+      ?.split("=")[1];
+
+    const token = document.cookie
+      .split(";")
+      .find((row) => row.trim().startsWith("token="))
+      ?.split("=")[1];
+    if (token && role) {
+      router.push(`/${role}`);
+    }
+
+    console.log(document.cookie);
+  }, [router]);
+
   async function handleLogin(e: React.FormEvent) {
     setLoading(true);
     e.preventDefault();
@@ -25,10 +43,17 @@ export default function Login() {
 
       const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
       const role = userDoc.data()?.role;
-      document.cookie = `role=${role}; path=/; max-age=3600`;
+      document.cookie = `role=${role}; path=/; max-age=900`;
       const token = await userCredential.user.getIdToken();
       console.log("User token:", token);
-      document.cookie = `token=${token}; path=/; max-age=3600`;
+      document.cookie = `token=${token}; path=/; max-age=900`;
+      if (role === "student") {
+        router.push("/student");
+      } else if (role === "teacher") {
+        router.push("/teacher");
+      } else if (role === "admin") {
+        router.push("/admin");
+      }
       setLoading(false);
     } catch (error) {
       console.error("Error logging in:", error);
