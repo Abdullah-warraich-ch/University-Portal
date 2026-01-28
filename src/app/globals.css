@@ -1,8 +1,11 @@
-/* 1️⃣ Import Google Fonts */
+@source "../**/*.{js,ts,jsx,tsx,mdx}";
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 /* 2️⃣ Import Tailwind */
 @import "tailwindcss";
+
+/* @custom-variant dark (&:is(.dark *)); */
 
 /* 3️⃣ Define semantic theme variables */
 @theme {
@@ -10,7 +13,7 @@
   --font-poppins: "Poppins", sans-serif;
 
   /* Primary Colors */
-  --color-primary: #925FE2;
+  --color-primary: #925fe2;
   --color-secondary: #64748b;
 
   /* Backgrounds */
@@ -44,4 +47,11 @@ body {
   font-family: var(--font-poppins);
   background-color: var(--color-background);
   color: var(--color-text-primary);
+}
+input:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #020617 inset !important; /* your input bg */
+  -webkit-text-fill-color: white !important; /* your text color */
+}
+input:-webkit-autofill::first-line {
+  font-family: var(--font-poppins);
 }

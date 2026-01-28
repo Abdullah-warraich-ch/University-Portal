@@ -7,7 +7,21 @@ import { RiBuilding2Fill } from "react-icons/ri";
 import { MdSettings } from "react-icons/md";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { auth } from "@/app/Firebase";
+import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
+
 function Sidebar() {
+  const router = useRouter();
+  async function Logout() {
+    try {
+      await signOut(auth);
+      console.log("User signed out");
+      router.push("/login");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  }
   const sactive: string = "text-primary font-bold bg-primary/10 rounded-lg";
   const pathname = usePathname();
   return (
@@ -73,7 +87,10 @@ function Sidebar() {
         />
         <h4 className="text-text-primary font-black">Muhammad Abdullah</h4>
         <p className="text-text-muted text-xs font-medium">Admin</p>
-        <button className="w-full bg-primary font-medium rounded-lg p-1">
+        <button
+          onClick={Logout}
+          className="w-full bg-primary font-medium rounded-lg p-1"
+        >
           Logout
         </button>
         <p className="text-sm text-text-muted border border-border p-1 px-2 rounded-full mt-1">
