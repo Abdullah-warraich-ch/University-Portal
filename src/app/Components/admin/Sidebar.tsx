@@ -18,6 +18,8 @@ function Sidebar() {
       await signOut(auth);
       console.log("User signed out");
       router.push("/login");
+      document.cookie = "role=null; path=/; max-age=0";
+      document.cookie = "token=null; path=/; max-age=0";
     } catch (error) {
       console.error("Error signing out:", error);
     }
