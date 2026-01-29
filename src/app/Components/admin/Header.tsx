@@ -1,6 +1,7 @@
 import React from "react";
 import { Bell, MessageCircle, Search } from "lucide-react";
 import Image from "next/image";
+import ToggleTheme from "@/app/Components/admin/ToggleTheme";
 
 function Header() {
   return (
@@ -19,7 +20,9 @@ function Header() {
               className="outline-border  border py-1 px-4 pl-8 border-border rounded-full"
             />
           </div>
+
           <div className="flex gap-5 justify-center items-center">
+            <ToggleTheme  />
             <Bell className="text-text-muted" size={18} />
             <MessageCircle className="text-text-muted" size={18} />
           </div>
