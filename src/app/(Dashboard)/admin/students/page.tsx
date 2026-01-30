@@ -3,6 +3,7 @@ import { getDocs, doc, collection } from "firebase/firestore";
 import { db } from "@/app/Firebase";
 import React, { useEffect } from "react";
 import { FirebaseContext } from "@/app/Context";
+import Link from "next/link";
 
 function Students() {
   const { students } = React.useContext(FirebaseContext)!;
@@ -16,9 +17,12 @@ function Students() {
           </p>
         </div>
         <div>
-          <button className="p-2 px-4 rounded-lg border  border-border hover:bg-primary hover:text-white transition cursor-pointer">
+          <Link
+            href="/admin/students/add"
+            className="p-2 px-4 rounded-lg border  border-border hover:bg-primary hover:text-white transition cursor-pointer"
+          >
             Add Student
-          </button>
+          </Link>
         </div>
       </div>
       <div className="border border-border rounded-lg p-4">
@@ -38,16 +42,19 @@ function Students() {
             {students.map((student, index) => (
               <tr key={index} className="border-b border-border/20 text-sm">
                 <td className="py-2 px-4">{student.name}</td>
-                <td className="py-2 px-4">{student.studentId}</td>
+                <td className="py-2 px-4">{student.id}</td>
                 <td className="py-2 px-4">{student.email}</td>
                 <td className="py-2 px-4">{student.phone}</td>
                 <td className="py-2 px-4">{student.semester}</td>
                 <td className="py-2 px-4">{student.department}</td>
 
                 <td className="py-2 px-4">
-                  <button className="p-1 px-3 rounded-lg border border-border hover:bg-primary hover:text-white transition cursor-pointer text-sm">
+                  <Link
+                    href={`/admin/students/edit/${student.email}`}
+                    className="p-1 px-3 rounded-lg border border-border hover:bg-primary hover:text-white transition cursor-pointer text-sm"
+                  >
                     Edit
-                  </button>
+                  </Link>
                 </td>
               </tr>
             ))}
