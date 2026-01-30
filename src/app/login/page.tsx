@@ -43,10 +43,10 @@ export default function Login() {
 
       const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
       const role = userDoc.data()?.role;
-      document.cookie = `role=${role}; path=/; max-age=900`;
+      document.cookie = `role=${role}; path=/ `;
       const token = await userCredential.user.getIdToken();
       console.log("User token:", token);
-      document.cookie = `token=${token}; path=/; max-age=900`;
+      document.cookie = `token=${token}; path=/`;
       if (role === "student") {
         router.push("/student");
       } else if (role === "teacher") {

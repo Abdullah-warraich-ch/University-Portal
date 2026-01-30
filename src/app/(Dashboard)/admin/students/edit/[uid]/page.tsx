@@ -1,57 +1,81 @@
 "use client";
 import React from "react";
+import { useEffect } from "react";
 import { auth, db } from "@/app/Firebase";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getDocs, doc, collection, addDoc, setDoc } from "firebase/firestore";
+import {
+  getDocs,
+  getDoc,
+  doc,
+  collection,
+  addDoc,
+  setDoc,
+} from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import {Spinner} from "@/components/ui/spinner";
-function TeacherDetail() {
-  const router = useRouter();
+import { Spinner } from "@/components/ui/spinner";
+import { useParams } from "next/navigation";
+
+function EditStudentDetail() {
+  const { uid } = useParams();
   const [loading, setLoading] = React.useState(false);
-  const [teacherEmail, setTeacherEmail] = React.useState("");
-  const [teacherPassword, setTeacherPassword] = React.useState("");
-  const [teacherId, setTeacherId] = React.useState("");
-  const [teacherName, setTeacherName] = React.useState("");
-  const [teacherDepartment, setTeacherDepartment] = React.useState("");
-  const [teacherPost, setTeacherPost] = React.useState("");
-  const [teacherPhone, setTeacherPhone] = React.useState("");
-  async function CreateTeacherCredentials(e: React.FormEvent) {
+  const [studentEmail, setStudentEmail] = React.useState("");
+  const [studentPassword, setStudentPassword] = React.useState("");
+  const [studentId, setStudentId] = React.useState("");
+  const [studentName, setStudentName] = React.useState("");
+  const [studentDepartment, setStudentDepartment] = React.useState("");
+  const [studentSemester, setStudentSemester] = React.useState("");
+  const [studentPhone, setStudentPhone] = React.useState("");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // Fetch student data by uid and populate the form fields
+    const fetchStudentData = async () => {
+      const studentDoc = await getDoc(doc(db, "users", uid));
+      if (studentDoc.exists()) {
+        const data = studentDoc.data();
+        setStudentEmail(data.email);
+        setStudentId(data.id);
+        setStudentName(data.name);
+        setStudentDepartment(data.department);
+        setStudentSemester(data.semester);
+        setStudentPhone(data.phone);
+      }
+    };
+    fetchStudentData();
+  }, [uid]);
+
+  async function updateStudentDetails(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        teacherEmail,
-        teacherPassword,
-      );
-
-      const user = userCredential.user;
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        email: teacherEmail,
-        name: teacherName,
-        id: teacherId,
-        department: teacherDepartment,
-        post: teacherPost,
-        phone: teacherPhone,
-        role: "teacher",
+      await setDoc(doc(db, "users", uid), {
+        uid: uid,
+        email: studentEmail,
+        name: studentName,
+        id: studentId,
+        department: studentDepartment,
+        semester: studentSemester,
+        phone: studentPhone,
+        role: "student",
       });
-      console.log("Teacher account created:", user);
-      router.push("/admin/teachers");
+      console.log("Student account updated:", uid);
+
+      router.push("/admin/students");
       setLoading(false);
     } catch (error) {
-      console.error("Error creating teacher account:", error);
-      alert("Error creating teacher account. Please try again.");
+      console.error("Error updating student account:", error);
+      alert("Error updating student account. Please try again.");
     }
   }
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-medium mb-4">Add Teacher</h1>
-      <form onSubmit={CreateTeacherCredentials} className="space-y-4 ">
+      <h1 className="text-2xl font-medium mb-4">Edit Student</h1>
+      <form onSubmit={updateStudentDetails} className="space-y-4 ">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           <div>
             <label
@@ -63,26 +87,12 @@ function TeacherDetail() {
             <input
               type="email"
               id="email"
-              value={teacherEmail}
-              onChange={(e) => setTeacherEmail(e.target.value)}
+              value={studentEmail}
+              onChange={(e) => setStudentEmail(e.target.value)}
               className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
             />
           </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-text-muted mb-1"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={teacherPassword}
-              onChange={(e) => setTeacherPassword(e.target.value)}
-              className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
-            />
-          </div>
+
           <div>
             <label
               htmlFor="name"
@@ -93,8 +103,8 @@ function TeacherDetail() {
             <input
               type="text"
               id="name"
-              value={teacherName}
-              onChange={(e) => setTeacherName(e.target.value)}
+              value={studentName}
+              onChange={(e) => setStudentName(e.target.value)}
               className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
             />
           </div>
@@ -103,13 +113,13 @@ function TeacherDetail() {
               htmlFor="id"
               className="block text-sm font-medium text-text-muted mb-1"
             >
-              Employe ID
+              Student ID
             </label>
             <input
               type="text"
               id="id"
-              value={teacherId}
-              onChange={(e) => setTeacherId(e.target.value)}
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
               className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
             />
           </div>
@@ -121,8 +131,8 @@ function TeacherDetail() {
               Department
             </label>
             <select
-              value={teacherDepartment}
-              onChange={(e) => setTeacherDepartment(e.target.value)}
+              value={studentDepartment}
+              onChange={(e) => setStudentDepartment(e.target.value)}
               name="department"
               id="department"
               className="w-full p-2.5 border border-border rounded-lg focus:ring-primary focus:border-primary"
@@ -143,38 +153,44 @@ function TeacherDetail() {
           </div>
           <div>
             <label
-              htmlFor="post"
+              htmlFor="semester"
               className="block text-sm font-medium text-text-muted mb-1"
             >
-              Post
+              Semester
             </label>
             <select
-              value={teacherPost}
-              onChange={(e) => setTeacherPost(e.target.value)}
-              name="post"
-              id="post"
+              value={studentSemester}
+              onChange={(e) => setStudentSemester(e.target.value)}
+              name="semester"
+              id="semester"
               className="w-full p-2.5 border border-border rounded-lg focus:ring-primary focus:border-primary"
             >
               <option value="" className="bg-background">
-                Select Post
+                Select Semester
               </option>
-              <option value="professor" className="bg-background">
-                Professor
+              <option value="1st" className="bg-background">
+                1st Semester
               </option>
-              <option value="lecture" className="bg-background">
-                Lecture
+              <option value="2nd" className="bg-background">
+                2nd Semester
               </option>
-              <option value="temporary" className="bg-background">
-                Temporary
+              <option value="3rd" className="bg-background">
+                3rd Semester
               </option>
-              <option value="assistant" className="bg-background">
-                Assistant Professor
+              <option value="4th" className="bg-background">
+                4th Semester
               </option>
-              <option value="associate" className="bg-background">
-                Associate Professor
+              <option value="5th" className="bg-background">
+                5th Semester
               </option>
-              <option value="lab" className="bg-background">
-                Lab Attendent
+              <option value="6th" className="bg-background">
+                6th Semester
+              </option>
+              <option value="7th" className="bg-background">
+                7th Semester
+              </option>
+              <option value="8th" className="bg-background">
+                8th Semester
               </option>
             </select>
           </div>
@@ -188,8 +204,8 @@ function TeacherDetail() {
             <input
               type="text"
               id="phone"
-              value={teacherPhone}
-              onChange={(e) => setTeacherPhone(e.target.value)}
+              value={studentPhone}
+              onChange={(e) => setStudentPhone(e.target.value)}
               className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
             />
           </div>
@@ -199,16 +215,16 @@ function TeacherDetail() {
           className="p-2 px-4 rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer"
         >
           {loading ? (
-              <span className="flex items-center gap-2">
-                <Spinner className="w-5 h-5" /> Creating Account
-              </span>
-            ) : (
-              "Create Teacher Account"
-            )}
+            <span className="flex items-center gap-2">
+              <Spinner className="w-5 h-5" /> Updating
+            </span>
+          ) : (
+            "Update"
+          )}
         </button>
       </form>
     </div>
   );
 }
 
-export default TeacherDetail;
+export default EditStudentDetail;

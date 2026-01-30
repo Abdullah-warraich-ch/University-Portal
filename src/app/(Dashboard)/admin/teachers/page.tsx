@@ -1,5 +1,5 @@
 "use client";
-import { getDocs, doc, collection } from "firebase/firestore";
+import { getDocs, doc, collection, deleteDoc } from "firebase/firestore";
 import { db } from "@/app/Firebase";
 import React, { useEffect } from "react";
 import { FirebaseContext } from "@/app/Context";
@@ -7,6 +7,17 @@ import Link from "next/link";
 
 function Teachers() {
   const { teachers } = React.useContext(FirebaseContext)!;
+
+  async function deleteRecord(uid: string) {
+    try {
+      await deleteDoc(doc(db, "users", uid));
+      // Optionally, you can refresh the page or update the state to reflect the deletion
+    } catch (error) {
+      console.error("Error deleting teacher record:", error);
+      alert("Error deleting teacher record. Please try again.");
+    }
+  }
+
   return (
     <div className="p-8 space-y-6">
       <div className="flex justify-between items-center">
@@ -50,11 +61,17 @@ function Teachers() {
 
                 <td className="py-2 px-4">
                   <Link
-                    href={`/admin/teachers/edit/${teacher.email}`}
+                    href={`/admin/teachers/edit/${teacher.uid}`}
                     className="p-1 px-3 rounded-lg border border-border hover:bg-primary hover:text-white transition cursor-pointer text-sm"
                   >
                     Edit
                   </Link>
+                  <button
+                    onClick={() => deleteRecord(teacher.uid)}
+                    className="p-1 px-3 rounded-lg border border-border hover:bg-danger hover:text-white transition cursor-pointer text-sm ml-2"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

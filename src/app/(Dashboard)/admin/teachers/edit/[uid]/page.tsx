@@ -1,36 +1,59 @@
 "use client";
 import React from "react";
+import { useEffect } from "react";
 import { auth, db } from "@/app/Firebase";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getDocs, doc, collection, addDoc, setDoc } from "firebase/firestore";
+import {
+  getDocs,
+  getDoc,
+  doc,
+  collection,
+  addDoc,
+  setDoc,
+} from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import {Spinner} from "@/components/ui/spinner";
-function TeacherDetail() {
-  const router = useRouter();
+import { Spinner } from "@/components/ui/spinner";
+import { useParams } from "next/navigation";
+
+function EditTeacherDetail() {
+  const { uid } = useParams();
   const [loading, setLoading] = React.useState(false);
   const [teacherEmail, setTeacherEmail] = React.useState("");
-  const [teacherPassword, setTeacherPassword] = React.useState("");
+
   const [teacherId, setTeacherId] = React.useState("");
   const [teacherName, setTeacherName] = React.useState("");
   const [teacherDepartment, setTeacherDepartment] = React.useState("");
   const [teacherPost, setTeacherPost] = React.useState("");
   const [teacherPhone, setTeacherPhone] = React.useState("");
-  async function CreateTeacherCredentials(e: React.FormEvent) {
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // Fetch teacher data by uid and populate the form fields
+    const fetchTeacherData = async () => {
+      const teacherDoc = await getDoc(doc(db, "users", uid));
+      if (teacherDoc.exists()) {
+        const data = teacherDoc.data();
+        setTeacherEmail(data.email);
+        setTeacherId(data.id);
+        setTeacherName(data.name);
+        setTeacherDepartment(data.department);
+        setTeacherPost(data.post);
+        setTeacherPhone(data.phone);
+      }
+    };
+    fetchTeacherData();
+  }, [uid]);
+
+  async function updateTeacherDetails(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        teacherEmail,
-        teacherPassword,
-      );
-
-      const user = userCredential.user;
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
+      await setDoc(doc(db, "users", uid), {
+        uid: uid,
         email: teacherEmail,
         name: teacherName,
         id: teacherId,
@@ -39,19 +62,20 @@ function TeacherDetail() {
         phone: teacherPhone,
         role: "teacher",
       });
-      console.log("Teacher account created:", user);
+      console.log("Teacher account updated:", uid);
+
       router.push("/admin/teachers");
       setLoading(false);
     } catch (error) {
-      console.error("Error creating teacher account:", error);
-      alert("Error creating teacher account. Please try again.");
+      console.error("Error updating teacher account:", error);
+      alert("Error updating teacher account. Please try again.");
     }
   }
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-medium mb-4">Add Teacher</h1>
-      <form onSubmit={CreateTeacherCredentials} className="space-y-4 ">
+      <h1 className="text-2xl font-medium mb-4">Edit Teacher</h1>
+      <form onSubmit={updateTeacherDetails} className="space-y-4 ">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           <div>
             <label
@@ -68,21 +92,7 @@ function TeacherDetail() {
               className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
             />
           </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-text-muted mb-1"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={teacherPassword}
-              onChange={(e) => setTeacherPassword(e.target.value)}
-              className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
-            />
-          </div>
+
           <div>
             <label
               htmlFor="name"
@@ -199,16 +209,16 @@ function TeacherDetail() {
           className="p-2 px-4 rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer"
         >
           {loading ? (
-              <span className="flex items-center gap-2">
-                <Spinner className="w-5 h-5" /> Creating Account
-              </span>
-            ) : (
-              "Create Teacher Account"
-            )}
+            <span className="flex items-center gap-2">
+              <Spinner className="w-5 h-5" /> Updating
+            </span>
+          ) : (
+            "Update"
+          )}
         </button>
       </form>
     </div>
   );
 }
 
-export default TeacherDetail;
+export default EditTeacherDetail;
