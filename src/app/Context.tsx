@@ -13,6 +13,7 @@ type FirebaseContextType = {
   data: DocumentData[];
   students: DocumentData[];
   teachers: DocumentData[];
+  courses: DocumentData[];
 };
 
 export const FirebaseContext = React.createContext<FirebaseContextType | null>(
@@ -23,10 +24,23 @@ function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = React.useState<DocumentData[]>([]);
   const [students, setStudents] = React.useState<DocumentData[]>([]);
   const [teachers, setTeachers] = React.useState<DocumentData[]>([]);
+  const [courses, setCourses] = React.useState<DocumentData[]>([]);
   useEffect(() => {
     // 1. Create a reference to the collection
     const usersCollection = collection(db, "users");
-
+    const coursesCollection = collection(db, "courses");
+    const fetchCourses = async () => {
+      const coursesSnapshot = onSnapshot(coursesCollection, (snapshot) => {
+        const coursesList = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCourses(coursesList);
+        console.log("Courses fetched:", coursesList);
+      });
+      return () => coursesSnapshot(); // Cleanup listener on unmount
+    };
+    fetchCourses();
     // 2. Set up the "Snapshot" listener
     const unsubscribe = onSnapshot(
       usersCollection,
@@ -54,7 +68,7 @@ function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, []); // Empty dependency array is correct here
   return (
-    <FirebaseContext.Provider value={{ data, students, teachers }}>
+    <FirebaseContext.Provider value={{ data, students, teachers, courses }}>
       {children}
     </FirebaseContext.Provider>
   );
