@@ -1,34 +1,58 @@
 "use client";
 import React, { Context, useEffect } from "react";
 import { db } from "@/app/Firebase";
-import { getDocs, doc, collection, DocumentData } from "firebase/firestore";
+import {
+  getDocs,
+  doc,
+  onSnapshot,
+  collection,
+  DocumentData,
+} from "firebase/firestore";
 
-  type FirebaseContextType = {
-    data: DocumentData[];
-    students: DocumentData[];
-    teachers: DocumentData[];
-  };
-  
-export const FirebaseContext = React.createContext<FirebaseContextType | null>(null);
+type FirebaseContextType = {
+  data: DocumentData[];
+  students: DocumentData[];
+  teachers: DocumentData[];
+};
+
+export const FirebaseContext = React.createContext<FirebaseContextType | null>(
+  null,
+);
 
 function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
-
-
   const [data, setData] = React.useState<DocumentData[]>([]);
   const [students, setStudents] = React.useState<DocumentData[]>([]);
   const [teachers, setTeachers] = React.useState<DocumentData[]>([]);
   useEffect(() => {
-    const fetchData = async () => {
-      const querySnapshot = await getDocs(collection(db, "users"));
-      const res = querySnapshot.docs.map((doc) => doc.data());
-      setData(res);
-      const studentsData = res.filter((user) => user.role === "student");
-      setStudents(studentsData);
-      const teachersData = res.filter((user) => user.role === "teacher");
-      setTeachers(teachersData);
-    };
-    fetchData();
-  }, []);
+    // 1. Create a reference to the collection
+    const usersCollection = collection(db, "users");
+
+    // 2. Set up the "Snapshot" listener
+    const unsubscribe = onSnapshot(
+      usersCollection,
+      (snapshot) => {
+        // This block runs immediately on load AND every time data changes
+        const res = snapshot.docs.map((doc) => ({
+          id: doc.id, // Good practice: include the document ID
+          ...doc.data(),
+        }));
+
+        setData(res);
+
+        // Filter the real-time data into your specific states
+        setStudents(res.filter((user) => user.role === "student"));
+        setTeachers(res.filter((user) => user.role === "teacher"));
+
+        console.log("Data updated in real-time!");
+      },
+      (error) => {
+        console.error("Error fetching real-time data:", error);
+      },
+    );
+
+    // 3. Cleanup: Tell the listener to stop when the user leaves the page
+    return () => unsubscribe();
+  }, []); // Empty dependency array is correct here
   return (
     <FirebaseContext.Provider value={{ data, students, teachers }}>
       {children}

@@ -6,9 +6,11 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { getDocs, doc, collection, addDoc, setDoc } from "firebase/firestore";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import {Spinner} from "@/components/ui/spinner";
 function TeacherDetail() {
   const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
   const [teacherEmail, setTeacherEmail] = React.useState("");
   const [teacherPassword, setTeacherPassword] = React.useState("");
   const [teacherId, setTeacherId] = React.useState("");
@@ -18,6 +20,7 @@ function TeacherDetail() {
   const [teacherPhone, setTeacherPhone] = React.useState("");
   async function CreateTeacherCredentials(e: React.FormEvent) {
     e.preventDefault();
+    setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -37,8 +40,8 @@ function TeacherDetail() {
         role: "teacher",
       });
       console.log("Teacher account created:", user);
-      alert("Teacher account created successfully!");
       router.push("/admin/teachers");
+      setLoading(false);
     } catch (error) {
       console.error("Error creating teacher account:", error);
       alert("Error creating teacher account. Please try again.");
@@ -195,7 +198,13 @@ function TeacherDetail() {
           type="submit"
           className="p-2 px-4 rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer"
         >
-          Create Teacher Account
+          {loading ? (
+              <span className="flex items-center gap-2">
+                <Spinner className="w-5 h-5" /> Creating Account
+              </span>
+            ) : (
+              "Create Teacher Account"
+            )}
         </button>
       </form>
     </div>

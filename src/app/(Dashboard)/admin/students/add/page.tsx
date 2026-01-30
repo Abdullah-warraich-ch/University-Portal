@@ -6,9 +6,11 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { getDocs, doc, collection, addDoc, setDoc } from "firebase/firestore";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
 
 function StudentDetail() {
+  const [loading, setLoading] = React.useState(false);
   const [studentEmail, setStudentEmail] = React.useState("");
   const [studentPassword, setStudentPassword] = React.useState("");
   const [studentId, setStudentId] = React.useState("");
@@ -20,6 +22,7 @@ function StudentDetail() {
   const router = useRouter();
   async function CreateStudentCredentials(e: React.FormEvent) {
     e.preventDefault();
+    setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -39,8 +42,9 @@ function StudentDetail() {
         role: "student",
       });
       console.log("Student account created:", user);
-      alert("Student account created successfully!");
+
       router.push("/admin/students");
+      setLoading(false);
     } catch (error) {
       console.error("Error creating student account:", error);
       alert("Error creating student account. Please try again.");
@@ -203,7 +207,13 @@ function StudentDetail() {
           type="submit"
           className="p-2 px-4 rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer"
         >
-          Create Student Account
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <Spinner className="w-5 h-5" /> Creating Account
+            </span>
+          ) : (
+            "Create Student Account"
+          )}
         </button>
       </form>
     </div>
