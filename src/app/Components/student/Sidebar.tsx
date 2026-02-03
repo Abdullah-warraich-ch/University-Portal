@@ -18,7 +18,6 @@ function Sidebar() {
   const { teachers, students, currentUser, currentUserRecord } =
     React.useContext(FirebaseContext)!;
 
-  console.log("Teachers in Sidebar:", currentUserRecord);
   async function Logout() {
     try {
       await signOut(auth);
@@ -33,7 +32,7 @@ function Sidebar() {
   const sactive: string = "text-primary font-bold bg-primary/10 rounded-lg";
   const pathname = usePathname();
   return (
-    <div className="w-[20%]   h-screen p-10 border-r border-r-border/20">
+    <div className="w-full h-screen p-10 border-r border-r-border/20">
       <div className="flex items-center mb-10 border-b border-b-border/20  pb-4">
         <Image
           src="/admin.png"
@@ -48,26 +47,26 @@ function Sidebar() {
       </div>
       <div className="flex flex-col  font-medium">
         <Link
-          href="/teacher"
+          href="/student"
           className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher" ? sactive : "text-text-muted"}`}
         >
           <LayoutDashboard className="" size={20} /> Dashboard
         </Link>
         <Link
-          href="/teacher/courses"
+          href="/student/courses"
           className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher/courses" ? sactive : "text-text-muted"}`}
         >
           <Book className="" size={20} /> Courses
         </Link>
         <Link
-          href="/teacher/students"
+          href="/student/students"
           className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher/students" ? sactive : "text-text-muted"}`}
         >
           <PiStudent className="" size={20} /> Students
         </Link>
 
         <Link
-          href="/teacher/settings"
+          href="/student/settings"
           className={`flex items-center p-2 gap-2 ${pathname === "/teacher/settings" ? sactive : "text-text-muted"}`}
         >
           <MdSettings className="" size={20} /> Settings

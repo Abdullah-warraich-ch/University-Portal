@@ -20,11 +20,19 @@ export function proxy(request: NextRequest) {
   if (pathname.startsWith("/teacher") && role !== "teacher") {
     return NextResponse.redirect(new URL("/unauthorized", request.url));
   }
+  if (pathname === "/") {
+    if (role === "admin") {
+      return NextResponse.redirect(new URL("/admin/", request.url));
+    } else if (role === "student") {
+      return NextResponse.redirect(new URL("/student/", request.url));
+    } else if (role === "teacher") {
+      return NextResponse.redirect(new URL("/teacher/", request.url));
+    }
+  }
 
-  console.log(pathname);
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/student/:path*", "/teacher/:path*"],
+  matcher: ["/admin/:path*", "/student/:path*", "/teacher/:path*", "/"],
 };
