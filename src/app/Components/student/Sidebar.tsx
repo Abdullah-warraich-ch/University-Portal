@@ -10,9 +10,15 @@ import { usePathname } from "next/navigation";
 import { auth } from "@/app/Firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { FirebaseContext } from "@/app/Context";
+import React from "react";
 
 function Sidebar() {
   const router = useRouter();
+  const { teachers, students, currentUser, currentUserRecord } =
+    React.useContext(FirebaseContext)!;
+
+  console.log("Teachers in Sidebar:", currentUserRecord);
   async function Logout() {
     try {
       await signOut(auth);
@@ -42,38 +48,27 @@ function Sidebar() {
       </div>
       <div className="flex flex-col  font-medium">
         <Link
-          href="/admin"
-          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/admin" ? sactive : "text-text-muted"}`}
+          href="/teacher"
+          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher" ? sactive : "text-text-muted"}`}
         >
           <LayoutDashboard className="" size={20} /> Dashboard
         </Link>
         <Link
-          href="/admin/courses"
-          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/admin/courses" ? sactive : "text-text-muted"}`}
+          href="/teacher/courses"
+          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher/courses" ? sactive : "text-text-muted"}`}
         >
           <Book className="" size={20} /> Courses
         </Link>
         <Link
-          href="/admin/students"
-          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/admin/students" ? sactive : "text-text-muted"}`}
+          href="/teacher/students"
+          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher/students" ? sactive : "text-text-muted"}`}
         >
           <PiStudent className="" size={20} /> Students
         </Link>
+
         <Link
-          href="/admin/teachers"
-          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/admin/teachers" ? sactive : "text-text-muted"}`}
-        >
-          <GiTeacher className="" size={20} /> Teachers
-        </Link>
-        <Link
-          href="/admin/departments"
-          className={`flex items-center p-2 gap-2 transition-colors duration-10 ease-in-out   ${pathname === "/admin/departments" ? sactive : "text-text-muted"}`}
-        >
-          <RiBuilding2Fill className="" size={20} /> Departments
-        </Link>
-        <Link
-          href="/admin/settings"
-          className={`flex items-center p-2 gap-2 ${pathname === "/admin/settings" ? sactive : "text-text-muted"}`}
+          href="/teacher/settings"
+          className={`flex items-center p-2 gap-2 ${pathname === "/teacher/settings" ? sactive : "text-text-muted"}`}
         >
           <MdSettings className="" size={20} /> Settings
         </Link>
@@ -87,11 +82,15 @@ function Sidebar() {
           height={40}
           className=" object-contain"
         />
-        <h4 className="text-text-primary font-black">Muhammad Abdullah</h4>
-        <p className="text-text-muted text-xs font-medium">Admin</p>
+        <h4 className="text-text-primary font-black">
+          {currentUserRecord?.name || "Dummy Name"}
+        </h4>
+        <p className="text-text-muted text-xs font-medium">
+          {currentUserRecord?.role}
+        </p>
         <button
           onClick={Logout}
-          className="w-full bg-primary text-text-primary font-medium rounded-lg p-1"
+          className="w-full bg-primary font-medium rounded-lg p-1"
         >
           Logout
         </button>

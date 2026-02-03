@@ -14,6 +14,7 @@ function CourseDetail() {
   const [courseTeacher, setCourseTeacher] = React.useState("");
   const [courseDepartment, setCourseDepartment] = React.useState("");
   const [courseSemester, setCourseSemester] = React.useState("");
+  const [teacherUid, setTeacherUid] = React.useState("");
 
   const { teachers } = React.useContext(FirebaseContext)!;
 
@@ -27,6 +28,7 @@ function CourseDetail() {
         code: courseCode,
         title: courseName,
         teacher: courseTeacher,
+        teacherUid: teacherUid,
         department: courseDepartment,
         semester: courseSemester,
       });
@@ -97,6 +99,7 @@ function CourseDetail() {
                   className="bg-background"
                 >
                   {teacher.name}
+                  {setTeacherUid(teacher.uid)}
                 </option>
               ))}
             </select>

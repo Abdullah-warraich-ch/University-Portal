@@ -1,23 +1,26 @@
 "use client";
-import React, { Context, useEffect } from "react";
-import { db } from "@/app/Firebase";
+import React, { useEffect } from "react";
+import { db, auth } from "@/app/Firebase";
 import {
-  getDocs,
+  getDoc,
   doc,
   onSnapshot,
   collection,
   DocumentData,
 } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 type FirebaseContextType = {
   data: DocumentData[];
   students: DocumentData[];
   teachers: DocumentData[];
   courses: DocumentData[];
+  currentUser: DocumentData | null;
+  currentUserRecord: DocumentData | null;
 };
 
 export const FirebaseContext = React.createContext<FirebaseContextType | null>(
-  null,
+  null
 );
 
 function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
@@ -25,50 +28,76 @@ function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
   const [students, setStudents] = React.useState<DocumentData[]>([]);
   const [teachers, setTeachers] = React.useState<DocumentData[]>([]);
   const [courses, setCourses] = React.useState<DocumentData[]>([]);
+  const [currentUser, setCurrentUser] = React.useState<DocumentData | null>(
+    null
+  );
+  const [currentUserRecord, setCurrentUserRecord] =
+    React.useState<DocumentData | null>(null);
+
   useEffect(() => {
-    // 1. Create a reference to the collection
     const usersCollection = collection(db, "users");
     const coursesCollection = collection(db, "courses");
-    const fetchCourses = async () => {
-      const coursesSnapshot = onSnapshot(coursesCollection, (snapshot) => {
-        const coursesList = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setCourses(coursesList);
-        console.log("Courses fetched:", coursesList);
-      });
-      return () => coursesSnapshot(); // Cleanup listener on unmount
+
+    // 🔹 Users listener
+    const unsubscribeUsers = onSnapshot(usersCollection, (snapshot) => {
+      const res = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setData(res);
+      setStudents(res.filter((u) => u.role === "student"));
+      setTeachers(res.filter((u) => u.role === "teacher"));
+    });
+
+    // 🔹 Courses listener
+    const unsubscribeCourses = onSnapshot(coursesCollection, (snapshot) => {
+      const list = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCourses(list);
+    });
+
+    // 🔹 Auth listener (ONLY ONCE)
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        setCurrentUser(null);
+        setCurrentUserRecord(null);
+        return;
+      }
+
+      setCurrentUser(user as any);
+
+      const userDocRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(userDocRef);
+
+      if (docSnap.exists()) {
+        setCurrentUserRecord({ id: docSnap.id, ...docSnap.data() });
+      } else {
+        setCurrentUserRecord(null);
+      }
+    });
+
+    // ✅ Proper cleanup
+    return () => {
+      unsubscribeUsers();
+      unsubscribeCourses();
+      unsubscribeAuth();
     };
-    fetchCourses();
-    // 2. Set up the "Snapshot" listener
-    const unsubscribe = onSnapshot(
-      usersCollection,
-      (snapshot) => {
-        // This block runs immediately on load AND every time data changes
-        const res = snapshot.docs.map((doc) => ({
-          id: doc.id, // Good practice: include the document ID
-          ...doc.data(),
-        }));
+  }, []);
 
-        setData(res);
-
-        // Filter the real-time data into your specific states
-        setStudents(res.filter((user) => user.role === "student"));
-        setTeachers(res.filter((user) => user.role === "teacher"));
-
-        console.log("Data updated in real-time!");
-      },
-      (error) => {
-        console.error("Error fetching real-time data:", error);
-      },
-    );
-
-    // 3. Cleanup: Tell the listener to stop when the user leaves the page
-    return () => unsubscribe();
-  }, []); // Empty dependency array is correct here
   return (
-    <FirebaseContext.Provider value={{ data, students, teachers, courses }}>
+    <FirebaseContext.Provider
+      value={{
+        data,
+        students,
+        teachers,
+        courses,
+        currentUser,
+        currentUserRecord,
+      }}
+    >
       {children}
     </FirebaseContext.Provider>
   );

@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 import { useParams } from "next/navigation";
 import { FirebaseContext } from "@/app/Context";
+import teacher from "@/app/(Dashboard)/teacher/page";
 
 function EditCourseDetail() {
   const { id } = useParams();
@@ -24,6 +25,7 @@ function EditCourseDetail() {
   const [courseTeacher, setCourseTeacher] = React.useState("");
   const [courseDepartment, setCourseDepartment] = React.useState("");
   const [courseSemester, setCourseSemester] = React.useState("");
+  const [teacherUid, setTeacherUid] = React.useState("");
 
   const { teachers } = React.useContext(FirebaseContext)!;
 
@@ -40,6 +42,7 @@ function EditCourseDetail() {
         setCourseTeacher(data.teacher);
         setCourseDepartment(data.department);
         setCourseSemester(data.semester);
+        setTeacherUid(data.teacherUid);
       }
     };
     fetchCourseData();
@@ -54,6 +57,7 @@ function EditCourseDetail() {
         teacher: courseTeacher,
         department: courseDepartment,
         semester: courseSemester,
+        teacherUid: teacherUid,
       });
       console.log("Course updated:", id);
 
@@ -125,6 +129,7 @@ function EditCourseDetail() {
                   className="bg-background"
                 >
                   {teacher.name}
+                  {setTeacherUid(teacher.uid)}
                 </option>
               ))}
             </select>
