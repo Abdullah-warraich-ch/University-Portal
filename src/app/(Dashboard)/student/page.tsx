@@ -3,9 +3,11 @@ import React, { useContext } from "react";
 import { FirebaseContext } from "@/app/Context";
 import { DocumentData, updateDoc, doc, arrayUnion } from "firebase/firestore";
 import { db } from "@/app/Firebase";
+import Kpicard from "@/app/Components/student/Kpi-card";
 
 function Student() {
-  const { currentUserRecord, courses } = useContext(FirebaseContext)!;
+  const { currentUserRecord, enrolledCourses, availableCourses } =
+    useContext(FirebaseContext)!;
 
   async function RegisterCourse(code: string) {
     if (!currentUserRecord) return;
@@ -15,21 +17,6 @@ function Student() {
       registeredCourses: arrayUnion(code),
     });
   }
-
-  const totalCourses =
-    courses?.filter(
-      (course) =>
-        course.semester === currentUserRecord?.semester &&
-        course.department === currentUserRecord?.department,
-    ) ?? [];
-
-  const enrolledCourses = totalCourses.filter((course) =>
-    currentUserRecord?.registeredCourses?.includes(course.id),
-  );
-
-  const availableCourses = totalCourses.filter(
-    (course) => !currentUserRecord?.registeredCourses?.includes(course.id),
-  );
 
   return (
     <div className="p-8">
@@ -60,23 +47,21 @@ function Student() {
 
       <div>
         <h1 className="text-2xl font-bold mb-5">Enrolled Courses:</h1>
-        {enrolledCourses.length > 0 ? (
-          enrolledCourses.map((course, index) => (
-            <div
-              key={index}
-              className="flex justify-between items-center border border-border mb-4 p-4 rounded-2xl"
-            >
-              <div>
-                <h1 className="text-text-primary font-bold text-2xl">
-                  {course.title}
-                </h1>
-                <p className="text-text-muted text-sm">{course.teacher}</p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <h1>No Courses Enrolled Yet.</h1>
-        )}
+        <div className="grid grid-cols-3 gap-4">
+          {enrolledCourses.length > 0 ? (
+            enrolledCourses.map((course, index) => (
+              <Kpicard
+                key={index}
+                title={course.title}
+                teacher={course.teacher}
+                to={`/student/course/${course.code}`}
+                code={course.code}
+              />
+            ))
+          ) : (
+            <h1 className="text-text-muted">No Courses Enrolled Yet.</h1>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ function Sidebar() {
   const router = useRouter();
   const { teachers, students, currentUser, currentUserRecord } =
     React.useContext(FirebaseContext)!;
+  const [openCourses, setOpenCourses] = React.useState(false);
 
   async function Logout() {
     try {
@@ -48,16 +49,15 @@ function Sidebar() {
       <div className="flex flex-col  font-medium">
         <Link
           href="/student"
-          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher" ? sactive : "text-text-muted"}`}
+          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/student" ? sactive : "text-text-muted"}`}
         >
           <LayoutDashboard className="" size={20} /> Dashboard
         </Link>
-        <Link
-          href="/student/courses"
-          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher/courses" ? sactive : "text-text-muted"}`}
+        <button
+          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/student/courses" ? sactive : "text-text-muted"}`}
         >
           <Book className="" size={20} /> Courses
-        </Link>
+        </button>
         <Link
           href="/student/students"
           className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher/students" ? sactive : "text-text-muted"}`}

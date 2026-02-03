@@ -24,6 +24,9 @@ type FirebaseContextType = {
   courses: DocumentData[];
   currentUser: User | null;
   currentUserRecord: UserRecord | null;
+  totalCourses: DocumentData[];
+  enrolledCourses: DocumentData[];
+  availableCourses: DocumentData[];
 };
 
 export const FirebaseContext = React.createContext<FirebaseContextType | null>(
@@ -92,6 +95,21 @@ function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  const totalCourses =
+    courses?.filter(
+      (course) =>
+        course.semester === currentUserRecord?.semester &&
+        course.department === currentUserRecord?.department,
+    ) ?? [];
+
+  const enrolledCourses = totalCourses.filter((course) =>
+    currentUserRecord?.registeredCourses?.includes(course.id),
+  );
+
+  const availableCourses = totalCourses.filter(
+    (course) => !currentUserRecord?.registeredCourses?.includes(course.id),
+  );
+
   return (
     <FirebaseContext.Provider
       value={{
@@ -101,6 +119,9 @@ function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
         courses,
         currentUser,
         currentUserRecord,
+      totalCourses,
+      enrolledCourses,
+      availableCourses
       }}
     >
       {children}
