@@ -20,7 +20,7 @@ type FirebaseContextType = {
 };
 
 export const FirebaseContext = React.createContext<FirebaseContextType | null>(
-  null
+  null,
 );
 
 function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
@@ -29,7 +29,7 @@ function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
   const [teachers, setTeachers] = React.useState<DocumentData[]>([]);
   const [courses, setCourses] = React.useState<DocumentData[]>([]);
   const [currentUser, setCurrentUser] = React.useState<DocumentData | null>(
-    null
+    null,
   );
   const [currentUserRecord, setCurrentUserRecord] =
     React.useState<DocumentData | null>(null);
@@ -70,13 +70,13 @@ function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
       setCurrentUser(user as any);
 
       const userDocRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(userDocRef);
-
-      if (docSnap.exists()) {
-        setCurrentUserRecord({ id: docSnap.id, ...docSnap.data() });
-      } else {
-        setCurrentUserRecord(null);
-      }
+      const docSnap = onSnapshot(userDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setCurrentUserRecord({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          setCurrentUserRecord(null);
+        }
+      });
     });
 
     // ✅ Proper cleanup
@@ -84,6 +84,7 @@ function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
       unsubscribeUsers();
       unsubscribeCourses();
       unsubscribeAuth();
+      docSnap();
     };
   }, []);
 
