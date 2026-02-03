@@ -4,7 +4,7 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import Header from "@/app/Components/student/Header";
 import Sidebar from "@/app/Components/student/Sidebar";
 
-function layout({ children }: { children: React.ReactNode }) {
+function Layout({ children }: { children: React.ReactNode }) {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [sidebarWidth, setSidebarWidth] = useState<number | null>(null);
 
@@ -47,4 +47,4 @@ function layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default layout;
+export default Layout;

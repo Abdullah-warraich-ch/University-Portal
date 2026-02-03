@@ -1,22 +1,29 @@
 "use client";
 import React, { useEffect } from "react";
 import { db, auth } from "@/app/Firebase";
-import {
-  getDoc,
-  doc,
-  onSnapshot,
-  collection,
-  DocumentData,
-} from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
+import { doc, onSnapshot, collection, DocumentData } from "firebase/firestore";
+import { onAuthStateChanged, User } from "firebase/auth";
+
+type UserRecord = {
+  id: string;
+  uid: string;
+  role: "student" | "teacher" | "admin";
+  semester?: string;
+  department?: string;
+  registeredCourses?: string[];
+  email?: string;
+  name?: string;
+  phone?: string;
+  post?: string;
+};
 
 type FirebaseContextType = {
-  data: DocumentData[];
-  students: DocumentData[];
-  teachers: DocumentData[];
+  data: UserRecord[];
+  students: UserRecord[];
+  teachers: UserRecord[];
   courses: DocumentData[];
-  currentUser: DocumentData | null;
-  currentUserRecord: DocumentData | null;
+  currentUser: User | null;
+  currentUserRecord: UserRecord | null;
 };
 
 export const FirebaseContext = React.createContext<FirebaseContextType | null>(
@@ -24,67 +31,64 @@ export const FirebaseContext = React.createContext<FirebaseContextType | null>(
 );
 
 function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
-  const [data, setData] = React.useState<DocumentData[]>([]);
-  const [students, setStudents] = React.useState<DocumentData[]>([]);
-  const [teachers, setTeachers] = React.useState<DocumentData[]>([]);
+  const [data, setData] = React.useState<UserRecord[]>([]);
+  const [students, setStudents] = React.useState<UserRecord[]>([]);
+  const [teachers, setTeachers] = React.useState<UserRecord[]>([]);
   const [courses, setCourses] = React.useState<DocumentData[]>([]);
-  const [currentUser, setCurrentUser] = React.useState<DocumentData | null>(
-    null,
-  );
+  const [currentUser, setCurrentUser] = React.useState<User | null>(null);
   const [currentUserRecord, setCurrentUserRecord] =
-    React.useState<DocumentData | null>(null);
+    React.useState<UserRecord | null>(null);
 
   useEffect(() => {
-    const usersCollection = collection(db, "users");
-    const coursesCollection = collection(db, "courses");
-
-    // 🔹 Users listener
-    const unsubscribeUsers = onSnapshot(usersCollection, (snapshot) => {
-      const res = snapshot.docs.map((doc) => ({
+    const unsubscribeUsers = onSnapshot(collection(db, "users"), (snapshot) => {
+      const res: UserRecord[] = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
+        ...(doc.data() as Omit<UserRecord, "id">),
       }));
-
       setData(res);
       setStudents(res.filter((u) => u.role === "student"));
       setTeachers(res.filter((u) => u.role === "teacher"));
     });
 
-    // 🔹 Courses listener
-    const unsubscribeCourses = onSnapshot(coursesCollection, (snapshot) => {
-      const list = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setCourses(list);
-    });
+    const unsubscribeCourses = onSnapshot(
+      collection(db, "courses"),
+      (snapshot) => {
+        const list = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCourses(list);
+      },
+    );
 
-    // 🔹 Auth listener (ONLY ONCE)
-    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (!user) {
         setCurrentUser(null);
         setCurrentUserRecord(null);
         return;
       }
 
-      setCurrentUser(user as any);
+      setCurrentUser(user);
 
-      const userDocRef = doc(db, "users", user.uid);
-      const docSnap = onSnapshot(userDocRef, (docSnap) => {
-        if (docSnap.exists()) {
-          setCurrentUserRecord({ id: docSnap.id, ...docSnap.data() });
+      const userRef = doc(db, "users", user.uid);
+      const unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
+        if (snap.exists()) {
+          setCurrentUserRecord({
+            id: snap.id,
+            ...(snap.data() as Omit<UserRecord, "id">),
+          });
         } else {
           setCurrentUserRecord(null);
         }
       });
+
+      return () => unsubscribeUserDoc();
     });
 
-    // ✅ Proper cleanup
     return () => {
       unsubscribeUsers();
       unsubscribeCourses();
       unsubscribeAuth();
-      docSnap();
     };
   }, []);
 

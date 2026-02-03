@@ -113,23 +113,22 @@ function EditCourseDetail() {
               Course Teacher
             </label>
             <select
-              value={courseTeacher}
-              onChange={(e) => setCourseTeacher(e.target.value)}
-              name="teacher"
-              id="teacher"
+              value={teacherUid}
+              onChange={(e) => {
+                const selectedUid = e.target.value;
+                const selectedTeacher = teachers.find(
+                  (t) => t.uid === selectedUid,
+                );
+
+                setTeacherUid(selectedUid);
+                setCourseTeacher(selectedTeacher?.name || "");
+              }}
               className="w-full p-2.5 border border-border rounded-lg focus:ring-primary focus:border-primary"
             >
-              <option value="" className="bg-background">
-                Select Teacher
-              </option>
+              <option value="">Select Teacher</option>
               {teachers.map((teacher) => (
-                <option
-                  key={teacher.id}
-                  value={teacher.name}
-                  className="bg-background"
-                >
+                <option key={teacher.id} value={teacher.uid}>
                   {teacher.name}
-                  {setTeacherUid(teacher.uid)}
                 </option>
               ))}
             </select>
