@@ -34,7 +34,7 @@ function EditTeacherDetail() {
   useEffect(() => {
     // Fetch teacher data by uid and populate the form fields
     const fetchTeacherData = async () => {
-      const teacherDoc = await getDoc(doc(db, "users", uid));
+      const teacherDoc = await getDoc(doc(db, "users", uid as string));
       if (teacherDoc.exists()) {
         const data = teacherDoc.data();
         setTeacherEmail(data.email);
@@ -52,7 +52,7 @@ function EditTeacherDetail() {
     e.preventDefault();
     setLoading(true);
     try {
-      await setDoc(doc(db, "users", uid), {
+      await setDoc(doc(db, "users", uid as string), {
         uid: uid,
         email: teacherEmail,
         name: teacherName,

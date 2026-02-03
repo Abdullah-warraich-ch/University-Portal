@@ -34,7 +34,7 @@ function EditCourseDetail() {
   useEffect(() => {
     // Fetch student data by uid and populate the form fields
     const fetchCourseData = async () => {
-      const CourseDoc = await getDoc(doc(db, "courses", id));
+      const CourseDoc = await getDoc(doc(db, "courses", id as string));
       if (CourseDoc.exists()) {
         const data = CourseDoc.data();
         setCourseCode(data.code);
@@ -51,7 +51,7 @@ function EditCourseDetail() {
     e.preventDefault();
     setLoading(true);
     try {
-      await setDoc(doc(db, "courses", id), {
+      await setDoc(doc(db, "courses", id as string), {
         code: courseCode,
         title: courseName,
         teacher: courseTeacher,
