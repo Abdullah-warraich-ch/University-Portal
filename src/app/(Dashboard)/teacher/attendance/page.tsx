@@ -7,7 +7,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/app/Firebase";
 import CourseStudentCount from "@/app/Components/teacher/StudentCount";
 
-function Teacher() {
+function Attendance() {
   const { courses, currentUser, currentUserRecord } =
     React.useContext(FirebaseContext)!;
   const userCourses = courses.filter(
@@ -21,7 +21,7 @@ function Teacher() {
             key={index}
             title={course.title}
             value={<CourseStudentCount courseCode={course.code} />}
-            to={`/teacher/course/${course.code}`}
+            to={`/teacher/attendance/course/${course.code}`}
           />
         ))}
       </div>
@@ -29,4 +29,4 @@ function Teacher() {
   );
 }
 
-export default Teacher;
+export default Attendance;

@@ -17,8 +17,6 @@ function Sidebar() {
   const router = useRouter();
   const { teachers, students, currentUser, currentUserRecord } =
     React.useContext(FirebaseContext)!;
-
-  console.log("Teachers in Sidebar:", currentUserRecord);
   async function Logout() {
     try {
       await signOut(auth);
@@ -60,10 +58,10 @@ function Sidebar() {
           <Book className="" size={20} /> Courses
         </Link>
         <Link
-          href="/teacher/students"
-          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher/students" ? sactive : "text-text-muted"}`}
+          href="/teacher/attendance"
+          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher/attendance" ? sactive : "text-text-muted"}`}
         >
-          <PiStudent className="" size={20} /> Students
+          <PiStudent className="" size={20} /> Attendance
         </Link>
 
         <Link

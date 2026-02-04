@@ -1,7 +1,13 @@
 "use client";
 import React, { useContext } from "react";
 import { FirebaseContext } from "@/app/Context";
-import { DocumentData, updateDoc, doc, arrayUnion } from "firebase/firestore";
+import {
+  DocumentData,
+  updateDoc,
+  doc,
+  arrayUnion,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "@/app/Firebase";
 import Kpicard from "@/app/Components/student/Kpi-card";
 
@@ -12,10 +18,27 @@ function Student() {
   async function RegisterCourse(code: string) {
     if (!currentUserRecord) return;
 
-    const userRef = doc(db, "users", currentUserRecord.id);
+    const userRef = doc(db, "users", currentUserRecord.uid);
+    const courseRef = doc(
+      db,
+      "courses",
+      code,
+      "students",
+      currentUserRecord.uid,
+    );
     await updateDoc(userRef, {
       registeredCourses: arrayUnion(code),
     });
+    await setDoc(
+      courseRef,
+      {
+        name: currentUserRecord.name,
+        email: currentUserRecord.email,
+        uid: currentUserRecord.uid,
+        timestamp: new Date(),
+      },
+      { merge: true },
+    );
   }
 
   return (

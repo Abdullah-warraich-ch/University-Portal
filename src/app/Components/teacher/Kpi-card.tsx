@@ -7,7 +7,7 @@ function Kpicard({
   to,
 }: {
   title: string;
-  value: number;
+  value: string | React.ReactNode;
   to: string;
 }) {
   return (
