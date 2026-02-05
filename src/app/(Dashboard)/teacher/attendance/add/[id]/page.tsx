@@ -10,8 +10,9 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "@/app/Firebase";
-import { get } from "http";
+import { useRouter } from "next/navigation";
 function Add() {
+  const router = useRouter();
   const { id } = useParams();
   if (!id) {
     throw new Error("Course ID is missing");
@@ -21,8 +22,7 @@ function Add() {
   const [attendance, setAttendance] = React.useState<{
     [key: string]: { present: boolean; remarks: string };
   }>({});
-  const { currentUser, currentUserRecord, courses } =
-    React.useContext(FirebaseContext)!;
+  const { courses } = React.useContext(FirebaseContext)!;
   const [students, setStudents] = React.useState<DocumentData[]>([]);
   const CurrentCourse = courses.find((course) => course.code === id);
 
@@ -32,6 +32,7 @@ function Add() {
     const attendanceRef = collection(db, "courses", id as string, "attendance");
     const attendanceDoc = doc(attendanceRef, today);
     await setDoc(attendanceDoc, attendance);
+    router.push(`/teacher/attendance/course/${id}`);
   }
 
   const handleRemarksChange = (studentId: string, remarks: string) => {
