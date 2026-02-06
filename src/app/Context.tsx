@@ -4,7 +4,7 @@ import { db, auth } from "@/app/Firebase";
 import { doc, onSnapshot, collection, DocumentData } from "firebase/firestore";
 import { onAuthStateChanged, User } from "firebase/auth";
 
-type UserRecord = {
+export type UserRecord = {
   id: string;
   uid: string;
   role: "student" | "teacher" | "admin";
@@ -119,9 +119,9 @@ function FirebaseContextProvider({ children }: { children: React.ReactNode }) {
         courses,
         currentUser,
         currentUserRecord,
-      totalCourses,
-      enrolledCourses,
-      availableCourses
+        totalCourses,
+        enrolledCourses,
+        availableCourses,
       }}
     >
       {children}

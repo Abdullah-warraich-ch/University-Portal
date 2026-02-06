@@ -5,13 +5,22 @@ import { useContext, useState } from "react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { FirebaseContext } from "@/app/Context";
+import { UserRecord } from "@/app/Context";
 
 export default function AttendanceDay() {
+  interface AttendanceInfo {
+    present: boolean;
+    remarks?: string;
+  }
+
   const { id, date } = useParams(); // id = courseId, date = date document
-  const [attendanceData, setAttendanceData] = useState<DocumentData[]>([]);
-  const { students } = useContext(FirebaseContext);
+  const [attendanceData, setAttendanceData] = useState<
+    Record<string, AttendanceInfo>[]
+  >([]);
+
+  const { students } = useContext(FirebaseContext)!;
   const FindName = (id: string) => {
-    const student = students.find((s) => s.uid === id);
+    const student = students.find((s:UserRecord) => s.uid === id);
     return student ? student.name : "Unknown Student";
   };
   console.log("Students in AttendanceDay:", students);
@@ -48,18 +57,20 @@ export default function AttendanceDay() {
             </tr>
           </thead>
           <tbody>
-            {attendanceData?.flatMap((dayObject, dayIndex) =>
-              Object.entries(dayObject).map(([id, info]) => (
-                <tr
-                  key={`${dayIndex}-${id}`}
-                  className="border-b border-b-border"
-                >
-                  <td className="py-2">{FindName(id)}</td>
-                  <td className="py-2">{info.present ? "Yes" : "No"}</td>
-                  <td className="py-2">{info.remarks || "None"}</td>
-                </tr>
-              )),
-            )}
+            <tbody>
+              {attendanceData.flatMap((dayObject, dayIndex) =>
+                Object.entries(dayObject).map(([id, info]) => (
+                  <tr
+                    key={`${dayIndex}-${id}`}
+                    className="border-b border-b-border"
+                  >
+                    <td className="py-2">{FindName(id)}</td>
+                    <td className="py-2">{info.present ? "Yes" : "No"}</td>
+                    <td className="py-2">{info.remarks || "None"}</td>
+                  </tr>
+                )),
+              )}
+            </tbody>
           </tbody>
         </table>
       </div>
