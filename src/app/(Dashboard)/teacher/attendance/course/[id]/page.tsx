@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { FirebaseContext } from "@/app/Context";
 import Link from "next/link";
-import { collection, DocumentData, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/Firebase";
 
 function Course() {
@@ -67,10 +67,10 @@ function Course() {
           <thead>
             <tr className="bg-background-secondary border-b border-b-border text-left text-text-muted">
               <th className="py-2 ">Date</th>
-              <th className=" py-2">Total Students</th>
-              <th className=" py-2 ">Present Students</th>
-              <th className=" py-2 ">Absent Students</th>
-              <th className=" py-2">Action</th>
+              <th className="py-2">Total Students</th>
+              <th className="py-2 ">Present Students</th>
+              <th className="py-2 ">Absent Students</th>
+              <th className="py-2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -93,9 +93,12 @@ function Course() {
                   <td>{present}</td>
                   <td>{absent}</td>
                   <td>
-                    <button className="p-1 px-2 rounded-sm text-xs text-center m-auto bg-primary">
+                    <Link
+                      href={`/teacher/attendance/course/${id}/${date}`}
+                      className="p-1 px-2 rounded-sm text-xs text-center m-auto bg-primary"
+                    >
                       View
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               );
