@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+"use client";
+import React, { useMemo } from "react";
 
 function AddAssignment() {
-    const [today, setToday] = React.useState<Date | null>(null);
-  useEffect(() => {
+  const dueDate = useMemo(() => {
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return nextWeek.toISOString().split("T")[0]; // "YYYY-MM-DD"
+  }, []); // computed once on mount
 
-    setToday(new Date(Date.now()));
-    return () => {     
-    }
-  }, []);
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">Add Assignment</h1>
@@ -94,11 +94,7 @@ function AddAssignment() {
         <div>
           <label className="block mb-1 font-medium">Due Date</label>
           <input
-            defaultValue={
-              new Date(today?.getTime() + 7 * 24 * 60 * 60 * 1000)
-                .toISOString()
-                .split("T")[0]
-            }
+            defaultValue={dueDate}
             type="date"
             className="w-full border border-border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-primary"
           />
