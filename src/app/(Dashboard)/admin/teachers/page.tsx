@@ -67,7 +67,10 @@ function Teachers() {
                     Edit
                   </Link>
                   <button
-                    onClick={() => deleteRecord(teacher.uid)}
+                    onClick={() => {
+                      if (!teacher.uid) return;
+                      deleteRecord(teacher.uid);
+                    }}
                     className="p-1 px-3 rounded-lg border border-border hover:bg-danger hover:text-white transition cursor-pointer text-sm ml-2"
                   >
                     Delete

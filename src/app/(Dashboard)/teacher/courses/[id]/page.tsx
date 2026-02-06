@@ -4,12 +4,12 @@ import { FirebaseContext } from "@/app/Context";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { db } from "@/app/Firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, DocumentData, getDocs } from "firebase/firestore";
 import type { UserRecord } from "@/app/Context";
 
 function CourseContent() {
   const { courses } = React.useContext(FirebaseContext)!;
-  const [grades, setGrades] = React.useState<UserRecord[]>([]);
+  const [grades, setGrades] = React.useState<DocumentData[]>([]);
   const { id } = useParams();
   const course = courses.find((course) => course.code === id);
   useEffect(() => {

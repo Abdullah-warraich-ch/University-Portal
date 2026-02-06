@@ -5,9 +5,9 @@ import { doc, onSnapshot, collection, DocumentData } from "firebase/firestore";
 import { onAuthStateChanged, User } from "firebase/auth";
 
 export type UserRecord = {
-  id?: string;
-  uid?: string;
-  role?: "student" | "teacher" | "admin";
+  id: string;
+  uid: string;
+  role: "student" | "teacher" | "admin";
   semester?: string;
   department?: string;
   registeredCourses?: string[];
