@@ -13,17 +13,15 @@ function Kpicard({
   return (
     <Link
       href={to}
-      className="p-4 bg-card group rounded-lg h-auto flex flex-col justify-between  shadow-md w-64"
+      className="rounded-2xl border group border-white/10 bg-card/70 p-6 backdrop-blur-md shadow-xl"
     >
       <div className="flex  justify-between mb-2">
-        <h3 className="text-xs font-semibold text-text-primary max-w-4/6 ">
-          Course Name:{title}
+        <h3 className="mb-2 text-lg font-semibold text-text-primary">
+          {title}
         </h3>
         <MoveRight className="text-gray-400 group-hover:translate-x-1 transition-transform duration-200" />
       </div>
-      <p className="text-xl font-medium text-text-muted">
-        Total Students: {value}
-      </p>
+      <p className="text-sm text-text-muted">Total Students: {value}</p>
     </Link>
   );
 }

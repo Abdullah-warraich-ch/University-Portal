@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { db } from "@/app/Firebase";
 import { collection, DocumentData, getDocs } from "firebase/firestore";
-import type { UserRecord } from "@/app/Context";
 
 function CourseContent() {
   const { courses } = React.useContext(FirebaseContext)!;
@@ -65,7 +64,8 @@ function CourseContent() {
                   <td className="px-4 py-2">{grade.totalMarks}</td>
                   <td className="px-4 py-2">{grade.DueDate}</td>
                   <td className="px-4 gap-4 py-2 flex justify-center items-center">
-                    <button
+                    <Link
+                      href={`/teacher/courses/${id}/grade/${grade.type}`}
                       className={
                         grade.graded
                           ? "bg-secondary text-white px-2 py-1 rounded hover:bg-secondary/80 disabled:opacity-50 cursor-not-allowed"
@@ -73,7 +73,7 @@ function CourseContent() {
                       }
                     >
                       {grade.graded ? "Graded" : "Grade"}
-                    </button>
+                    </Link>
                     <button
                       className={
                         grade.graded

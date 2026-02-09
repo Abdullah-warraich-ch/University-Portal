@@ -57,7 +57,6 @@ export default function AttendanceDay() {
             </tr>
           </thead>
           <tbody>
-            <tbody>
               {attendanceData.flatMap((dayObject, dayIndex) =>
                 Object.entries(dayObject).map(([id, info]) => (
                   <tr
@@ -70,7 +69,6 @@ export default function AttendanceDay() {
                   </tr>
                 )),
               )}
-            </tbody>
           </tbody>
         </table>
       </div>

@@ -88,7 +88,7 @@ function Sidebar() {
         </p>
         <button
           onClick={Logout}
-          className="w-full bg-primary font-medium rounded-lg p-1"
+          className="w-full gradient-primary font-medium rounded-lg p-1"
         >
           Logout
         </button>
