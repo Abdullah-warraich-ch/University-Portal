@@ -29,9 +29,12 @@ function CourseContent() {
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold mb-2">Grades</h1>
         <div className="flex gap-4">
-          <button className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80">
+          <Link
+            href={`/teacher/courses/${id}/grade`}
+            className="gradient-primary text-white px-4 py-2 rounded hover:gradient-primary/80"
+          >
             Add Grade
-          </button>
+          </Link>
           <Link
             href={`/teacher/courses/${id}/add`}
             className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80"

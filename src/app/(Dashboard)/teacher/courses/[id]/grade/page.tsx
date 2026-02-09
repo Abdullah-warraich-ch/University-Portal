@@ -10,7 +10,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-
 import { useParams, useRouter } from "next/navigation";
 
 function Grade() {
@@ -25,6 +24,7 @@ function Grade() {
   const [assignments, setAssignments] = React.useState<DocumentData>([]);
   const [students, setStudents] = React.useState<DocumentData>([]);
   const [marks, setMarks] = React.useState<GradeMap>({});
+  const [totalMarks, setTotalMarks] = useState<number>(10);
 
   const setMarksForStudent = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,7 +119,21 @@ function Grade() {
                     required
                     className="outline-1 bg-secondary/20 outline-primary rounded w-10 mr-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
-                  /{assignments?.totalMarks}
+                  /
+                  <input
+                    type="number"
+                    value={totalMarks}
+                    onChange={(e) => {
+                      if (e.target.value === "") {
+                        setTotalMarks(10); // or you can choose to set it to a default value
+                      } else if (Number(e.target.value) > 100) {
+                        setTotalMarks(100);
+                      } else {
+                        setTotalMarks(Number(e.target.value));
+                      }
+                    }}
+                    className="outline-1 ml-2 pl-1 bg-secondary/20 outline-primary rounded w-10 mr-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
                 </td>
               </tr>
             ))}
