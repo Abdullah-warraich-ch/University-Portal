@@ -18,11 +18,13 @@ function Sidebar() {
 
   function handleCourseOpen() {
     setCourseIsOpen((prev) => {
+      setAttendanceIsOpen(false);
       return !prev;
     });
   }
   function handleAttendanceOpen() {
     setAttendanceIsOpen((prev) => {
+      setCourseIsOpen(false);
       return !prev;
     });
   }
@@ -42,99 +44,104 @@ function Sidebar() {
     "text-primary font-semibold bg-primary/10 border border-primary/20 shadow-sm";
   const pathname = usePathname();
   return (
-    <div className="w-full h-screen p-6 border-r border-r-border/30 bg-background/70 backdrop-blur-sm">
-      <div className="flex items-center mb-8 border-b border-b-border/30 pb-4">
-        <Image
-          src="/admin.png"
-          alt="Logo"
-          width={35}
-          height={35}
-          className="object-contain"
-        />
-        <h2 className="text-text-primary text-wrap font-extrabold tracking-tight text-lg ml-2">
-          University LMS
-        </h2>
-      </div>
-      <div className="flex flex-col font-medium space-y-1">
-        <Link
-          href="/student"
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/student"
-              ? sactive
-              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-          }`}
-        >
-          <LayoutDashboard className="" size={20} /> Dashboard
-        </Link>
-        <button
-          onClick={handleCourseOpen}
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/student/courses"
-              ? sactive
-              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-          }`}
-        >
-          <Book className="" size={20} />
-          <div className="flex justify-between w-full">
-            <span>Courses</span>
-            {courseIsOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-          </div>
-        </button>
-        {currentUserRecord?.registeredCourses?.map((code, index) => {
-          return (
-            <Link
-              key={index}
-              href={`/student/course/${code}`}
-              className={`flex items-center gap-3 rounded-lg px-2 ml-8 text-sm transition-colors ${courseIsOpen ? "" : "hidden"} duration-200 ease-in-out ${pathname === `/student/course/${code}` ? sactive : "text-text-muted hover:text-text-primary hover:bg-primary/5"}`}
-            >
-              {code}
-            </Link>
-          );
-        })}
-        <button
-          onClick={handleAttendanceOpen}
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/student/attendance"
-              ? sactive
-              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-          }`}
-        >
-          <Book className="" size={20} />
-          <div className="flex justify-between w-full">
-            <span>Attendance</span>
-            {attendanceIsOpen
-             ? (
-              <ChevronUp size={20} />
-            ) : (
-              <ChevronDown size={20} />
-            )}
-          </div>
-        </button>
-        {currentUserRecord?.registeredCourses?.map((code, index) => {
-          return (
-            <Link
-              key={index}
-              href={`/student/attendance/${code}`}
-              className={`flex items-center gap-3 rounded-lg px-2 ml-8 text-sm transition-colors ${attendanceIsOpen ? "" : "hidden"} duration-200 ease-in-out ${pathname === `/student/attendance/${code}` ? sactive : "text-text-muted hover:text-text-primary hover:bg-primary/5"}`}
-            >
-              {code}
-            </Link>
-          );
-        })}
+    <div className="w-full flex flex-col justify-between h-screen p-6 border-r border-r-border/30 bg-background/70 backdrop-blur-sm">
+      <div>
+        <div className="flex items-center mb-8 border-b border-b-border/30 pb-4">
+          <Image
+            src="/admin.png"
+            alt="Logo"
+            width={35}
+            height={35}
+            className="object-contain"
+          />
+          <h2 className="text-text-primary text-wrap font-extrabold tracking-tight text-lg ml-2">
+            University LMS
+          </h2>
+        </div>
+        <div className="flex grow flex-col font-medium space-y-1">
+          <Link
+            href="/student"
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
+              pathname === "/student"
+                ? sactive
+                : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+            }`}
+          >
+            <LayoutDashboard className="" size={20} /> Dashboard
+          </Link>
+          <button
+            onClick={handleCourseOpen}
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
+              pathname === "/student/courses"
+                ? sactive
+                : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+            }`}
+          >
+            <Book className="" size={20} />
+            <div className="flex justify-between w-full">
+              <span>Grades</span>
+              {courseIsOpen ? (
+                <ChevronUp size={20} />
+              ) : (
+                <ChevronDown size={20} />
+              )}
+            </div>
+          </button>
+          {currentUserRecord?.registeredCourses?.map((code, index) => {
+            return (
+              <Link
+                key={index}
+                href={`/student/grades/${code}`}
+                className={`flex items-center gap-3 rounded-lg px-2 ml-8 text-sm transition-colors ${courseIsOpen ? "" : "hidden"} duration-200 ease-in-out ${pathname === `/student/course/${code}` ? sactive : "text-text-muted hover:text-text-primary hover:bg-primary/5"}`}
+              >
+                {code}
+              </Link>
+            );
+          })}
+          <button
+            onClick={handleAttendanceOpen}
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
+              pathname === "/student/attendance"
+                ? sactive
+                : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+            }`}
+          >
+            <Book className="" size={20} />
+            <div className="flex justify-between w-full">
+              <span>Attendance</span>
+              {attendanceIsOpen ? (
+                <ChevronUp size={20} />
+              ) : (
+                <ChevronDown size={20} />
+              )}
+            </div>
+          </button>
+          {currentUserRecord?.registeredCourses?.map((code, index) => {
+            return (
+              <Link
+                key={index}
+                href={`/student/attendance/${code}`}
+                className={`flex items-center gap-3 rounded-lg px-2 ml-8 text-sm transition-colors ${attendanceIsOpen ? "" : "hidden"} duration-200 ease-in-out ${pathname === `/student/attendance/${code}` ? sactive : "text-text-muted hover:text-text-primary hover:bg-primary/5"}`}
+              >
+                {code}
+              </Link>
+            );
+          })}
 
-        <Link
-          href="/student/settings"
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/teacher/settings"
-              ? sactive
-              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-          }`}
-        >
-          <MdSettings className="" size={20} /> Settings
-        </Link>
+          <Link
+            href="/student/settings"
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
+              pathname === "/teacher/settings"
+                ? sactive
+                : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+            }`}
+          >
+            <MdSettings className="" size={20} /> Settings
+          </Link>
+        </div>
       </div>
 
-      <div className="mt-10 rounded-xl border border-border/30 bg-background-secondary/30 p-4 flex flex-col justify-center gap-1 items-center">
+      <div className=" mb-0 rounded-xl border border-border/30 bg-background-secondary/30 p-4 flex flex-col justify-center gap-1 items-center">
         <Image
           src="/man.png"
           alt="Profile"
