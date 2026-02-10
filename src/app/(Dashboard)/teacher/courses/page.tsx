@@ -3,12 +3,11 @@ import React from "react";
 import { FirebaseContext } from "@/app/Context";
 import { useContext } from "react";
 import Kpicard from "@/app/Components/teacher/Kpi-card";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@/app/Firebase";
+
 import CourseStudentCount from "@/app/Components/teacher/StudentCount";
 
 function Courses() {
-  const { courses, currentUser, currentUserRecord } =
+  const { courses, currentUser } =
     React.useContext(FirebaseContext)!;
   const userCourses = courses.filter(
     (course) => course.teacherUid === currentUser?.uid,

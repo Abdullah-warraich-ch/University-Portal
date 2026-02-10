@@ -77,7 +77,8 @@ function CourseContent() {
                     >
                       {grade.graded ? "Graded" : "Grade"}
                     </Link>
-                    <button
+                    <Link
+                      href={`/teacher/courses/${id}/view/${grade.type}`}
                       className={
                         grade.graded
                           ? "bg-primary text-white px-2 py-1 rounded hover:bg-primary/80"
@@ -85,7 +86,7 @@ function CourseContent() {
                       }
                     >
                       View
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}

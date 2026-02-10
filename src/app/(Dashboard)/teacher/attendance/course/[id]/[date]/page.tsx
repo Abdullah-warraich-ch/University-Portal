@@ -4,8 +4,7 @@ import { doc, getDoc, collection, DocumentData } from "firebase/firestore";
 import { useContext, useState } from "react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
-import { FirebaseContext } from "@/app/Context";
-import { UserRecord } from "@/app/Context";
+import { FindName } from "@/app/Components/teacher/actions/findStudentName";
 
 export default function AttendanceDay() {
   interface AttendanceInfo {
@@ -18,12 +17,6 @@ export default function AttendanceDay() {
     Record<string, AttendanceInfo>[]
   >([]);
 
-  const { students } = useContext(FirebaseContext)!;
-  const FindName = (id: string) => {
-    const student = students.find((s:UserRecord) => s.uid === id);
-    return student ? student.name : "Unknown Student";
-  };
-  console.log("Students in AttendanceDay:", students);
   return (
     useEffect(() => {
       const AttendanceData = async () => {
@@ -57,18 +50,18 @@ export default function AttendanceDay() {
             </tr>
           </thead>
           <tbody>
-              {attendanceData.flatMap((dayObject, dayIndex) =>
-                Object.entries(dayObject).map(([id, info]) => (
-                  <tr
-                    key={`${dayIndex}-${id}`}
-                    className="border-b border-b-border"
-                  >
-                    <td className="py-2">{FindName(id)}</td>
-                    <td className="py-2">{info.present ? "Yes" : "No"}</td>
-                    <td className="py-2">{info.remarks || "None"}</td>
-                  </tr>
-                )),
-              )}
+            {attendanceData.flatMap((dayObject, dayIndex) =>
+              Object.entries(dayObject).map(([id, info]) => (
+                <tr
+                  key={`${dayIndex}-${id}`}
+                  className="border-b border-b-border"
+                >
+                  <td className="py-2">{FindName(id)}</td>
+                  <td className="py-2">{info.present ? "Yes" : "No"}</td>
+                  <td className="py-2">{info.remarks || "None"}</td>
+                </tr>
+              )),
+            )}
           </tbody>
         </table>
       </div>
