@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
-import { FirebaseContext } from "@/app/Context";
+import {  } from "@/app/Context"; 
 import { useParams } from "next/navigation";
-import Link from "next/link";
+
 import { db } from "@/app/Firebase";
 import { doc, DocumentData, getDoc } from "firebase/firestore";
 import { FindName } from "@/app/Components/teacher/actions/findStudentName";

@@ -67,26 +67,28 @@ function CourseContent() {
                   <td className="px-4 py-2">{grade.totalMarks}</td>
                   <td className="px-4 py-2">{grade.DueDate}</td>
                   <td className="px-4 gap-4 py-2 flex justify-center items-center">
-                    <Link
-                      href={`/teacher/courses/${id}/grade/${grade.type}`}
-                      className={
-                        grade.graded
-                          ? "bg-secondary text-white px-2 py-1 rounded hover:bg-secondary/80 disabled:opacity-50 cursor-not-allowed"
-                          : "bg-primary text-white px-2 py-1 rounded hover:bg-primary/80"
-                      }
-                    >
-                      {grade.graded ? "Graded" : "Grade"}
-                    </Link>
-                    <Link
-                      href={`/teacher/courses/${id}/view/${grade.type}`}
-                      className={
-                        grade.graded
-                          ? "bg-primary text-white px-2 py-1 rounded hover:bg-primary/80"
-                          : "bg-secondary text-white px-2 py-1 rounded hover:bg-secondary/80 disabled:opacity-50 cursor-not-allowed"
-                      }
-                    >
-                      View
-                    </Link>
+                    {!grade.graded && (
+                      <Link
+                        href={`/teacher/courses/${id}/grade/${grade.type}`}
+                        className={
+                          grade.graded
+                            ? "bg-secondary text-white px-2 py-1 rounded hover:bg-secondary/80 disabled:opacity-50 cursor-not-allowed"
+                            : "bg-primary text-white px-2 py-1 rounded hover:bg-primary/80"
+                        }
+                      >
+                        {grade.graded ? "Graded" : "Grade"}
+                      </Link>
+                    )}
+                    {grade.graded && (
+                      <Link
+                        href={`/teacher/courses/${id}/view/${grade.type}`}
+                        className={
+                          "bg-success text-white px-2 py-1 rounded hover:bg-success/80"
+                        }
+                      >
+                        View
+                      </Link>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { FirebaseContext } from "@/app/Context";
 import {
   DocumentData,
@@ -7,6 +7,8 @@ import {
   doc,
   arrayUnion,
   setDoc,
+  collection,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "@/app/Firebase";
 import Kpicard from "@/app/Components/student/Kpi-card";
@@ -14,6 +16,25 @@ import Kpicard from "@/app/Components/student/Kpi-card";
 function Student() {
   const { currentUserRecord, enrolledCourses, availableCourses } =
     useContext(FirebaseContext)!;
+  const [attendanceData, setAttendanceData] = React.useState<
+    AttendanceRecord[]
+  >([]);
+  const [currentUserAttendance, setCurrentUserAttendance] = React.useState<
+    AttendanceRecord[]
+  >([]);
+
+  type StudentAttendance = {
+    [studentName: string]: {
+      present: boolean;
+      remarks: string;
+    };
+  };
+
+  type AttendanceRecord = {
+    id: string;
+    code: string;
+    data: StudentAttendance;
+  };
 
   async function RegisterCourse(code: string) {
     if (!currentUserRecord) return;
@@ -41,6 +62,34 @@ function Student() {
     );
   }
 
+  useEffect(() => {
+    currentUserRecord?.registeredCourses?.forEach((code: string) => {
+      const AttendanceRef = collection(db, "courses", code, "attendance");
+      getDocs(AttendanceRef).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          setAttendanceData((prev) => [
+            ...prev,
+            { id: doc.id, code: code, data: doc.data() },
+          ]);
+        });
+        console.log(`Attendance for course ${code}:`, attendanceData);
+      });
+    });
+    // const AccessCurrentUserAttendance = () => {
+    //   const userAttendance = attendanceData.filter((record) =>
+    //     Object.keys(record.data).includes(currentUserRecord?.uid || ""),
+    //   );
+    //   setCurrentUserAttendance(userAttendance);
+    // };
+    // AccessCurrentUserAttendance();
+  }, [currentUserRecord]);
+
+  if (attendanceData.length > 0) {
+    console.log("Final Attendance Data:", attendanceData);
+  }
+  if (currentUserAttendance.length > 0) {
+    console.log("Current Student Attendance:", currentUserAttendance);
+  }
   return (
     <div className="p-8">
       {availableCourses.length > 0 && (
@@ -85,6 +134,10 @@ function Student() {
             <h1 className="text-text-muted">No Courses Enrolled Yet.</h1>
           )}
         </div>
+      </div>
+      {/* Attendance */}
+      <div>
+        
       </div>
     </div>
   );

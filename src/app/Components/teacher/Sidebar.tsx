@@ -2,8 +2,7 @@
 import Image from "next/image";
 import { Book, LayoutDashboard } from "lucide-react";
 import { PiStudent } from "react-icons/pi";
-import { GiTeacher } from "react-icons/gi";
-import { RiBuilding2Fill } from "react-icons/ri";
+
 import { MdSettings } from "react-icons/md";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,7 +14,7 @@ import React from "react";
 
 function Sidebar() {
   const router = useRouter();
-  const { teachers, students, currentUser, currentUserRecord } =
+  const {  currentUserRecord } =
     React.useContext(FirebaseContext)!;
   async function Logout() {
     try {

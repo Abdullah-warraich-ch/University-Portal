@@ -62,7 +62,7 @@ function Sidebar() {
           href="/student/students"
           className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher/students" ? sactive : "text-text-muted"}`}
         >
-          <PiStudent className="" size={20} /> Students
+          <PiStudent className="" size={20} /> Attendance
         </Link>
 
         <Link
