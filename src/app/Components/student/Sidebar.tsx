@@ -1,9 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Book, LayoutDashboard, ChevronUp,ChevronDown } from "lucide-react";
-import { PiStudent } from "react-icons/pi";
-
-
+import { Book, LayoutDashboard, ChevronUp, ChevronDown } from "lucide-react";
 import { MdSettings } from "react-icons/md";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,11 +8,24 @@ import { auth } from "@/app/Firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { FirebaseContext } from "@/app/Context";
-import React from "react";
+import React, { useState } from "react";
 
 function Sidebar() {
   const router = useRouter();
   const { currentUserRecord } = React.useContext(FirebaseContext)!;
+  const [courseIsOpen, setCourseIsOpen] = useState(false);
+  const [attendanceIsOpen, setAttendanceIsOpen] = useState(false);
+
+  function handleCourseOpen() {
+    setCourseIsOpen((prev) => {
+      return !prev;
+    });
+  }
+  function handleAttendanceOpen() {
+    setAttendanceIsOpen((prev) => {
+      return !prev;
+    });
+  }
 
   async function Logout() {
     try {
@@ -57,24 +67,60 @@ function Sidebar() {
           <LayoutDashboard className="" size={20} /> Dashboard
         </Link>
         <button
+          onClick={handleCourseOpen}
           className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
             pathname === "/student/courses"
               ? sactive
               : "text-text-muted hover:text-text-primary hover:bg-primary/5"
           }`}
         >
-          <Book className="" size={20} /> Courses
+          <Book className="" size={20} />
+          <div className="flex justify-between w-full">
+            <span>Courses</span>
+            {courseIsOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </div>
         </button>
-        <Link
-          href="/student/students"
+        {currentUserRecord?.registeredCourses?.map((code, index) => {
+          return (
+            <Link
+              key={index}
+              href={`/student/course/${code}`}
+              className={`flex items-center gap-3 rounded-lg px-2 ml-8 text-sm transition-colors ${courseIsOpen ? "" : "hidden"} duration-200 ease-in-out ${pathname === `/student/course/${code}` ? sactive : "text-text-muted hover:text-text-primary hover:bg-primary/5"}`}
+            >
+              {code}
+            </Link>
+          );
+        })}
+        <button
+          onClick={handleAttendanceOpen}
           className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/teacher/students"
+            pathname === "/student/attendance"
               ? sactive
               : "text-text-muted hover:text-text-primary hover:bg-primary/5"
           }`}
         >
-          <PiStudent className="" size={20} /> Attendance 
-        </Link>
+          <Book className="" size={20} />
+          <div className="flex justify-between w-full">
+            <span>Attendance</span>
+            {attendanceIsOpen
+             ? (
+              <ChevronUp size={20} />
+            ) : (
+              <ChevronDown size={20} />
+            )}
+          </div>
+        </button>
+        {currentUserRecord?.registeredCourses?.map((code, index) => {
+          return (
+            <Link
+              key={index}
+              href={`/student/attendance/${code}`}
+              className={`flex items-center gap-3 rounded-lg px-2 ml-8 text-sm transition-colors ${attendanceIsOpen ? "" : "hidden"} duration-200 ease-in-out ${pathname === `/student/attendance/${code}` ? sactive : "text-text-muted hover:text-text-primary hover:bg-primary/5"}`}
+            >
+              {code}
+            </Link>
+          );
+        })}
 
         <Link
           href="/student/settings"
