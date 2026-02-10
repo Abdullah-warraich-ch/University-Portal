@@ -26,8 +26,19 @@ function Admin() {
     return () => {};
   }, []);
   return (
-    <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mx-4 my-8">
+    <div className="p-8 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary">
+            Overview
+          </h1>
+          <p className="text-sm text-text-muted">
+            University snapshot and totals
+          </p>
+        </div>
+        <span className="text-xs text-text-muted">Updated just now</span>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Kpicard title="Total Students" value={students} to="/admin/students" />
         <Kpicard title="Total Teachers" value={teachers} to="/admin/teachers" />
         <Kpicard title="Total Courses" value={courses} to="/admin/courses" />

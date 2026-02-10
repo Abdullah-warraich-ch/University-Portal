@@ -20,7 +20,9 @@ function Courses() {
     <div className="p-8 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-medium">Courses List</h1>
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary">
+            Courses List
+          </h1>
           <p className="text-text-muted text-sm">
             Home / <span className="text-text-primary">Courses</span>
           </p>
@@ -34,47 +36,52 @@ function Courses() {
           </Link>
         </div>
       </div>
-      <div className="border border-border rounded-lg p-4">
-        <table className="w-full">
+      <div className="border border-border/40 rounded-2xl p-4 bg-background-secondary/20">
+        <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border/20 text-sm text-text-muted">
-              <th className="text-left py-2 px-4  font-medium">Course Code</th>
-              <th className="text-left py-2 px-4 font-medium">Course Name</th>
-              <th className="text-left py-2 px-4 font-medium">
+            <tr className="bg-background-secondary/40 text-text-muted">
+              <th className="text-left py-3 px-4 font-semibold">Course Code</th>
+              <th className="text-left py-3 px-4 font-semibold">Course Name</th>
+              <th className="text-left py-3 px-4 font-semibold">
                 Assigned Teacher
               </th>
-              <th className="text-left py-2 px-4 font-medium">
+              <th className="text-left py-3 px-4 font-semibold">
                 Enrolled Student
               </th>
-              <th className="text-left py-2 px-4 font-medium">Semester</th>
-              <th className="text-left py-2 px-4 font-medium">Department</th>
+              <th className="text-left py-3 px-4 font-semibold">Semester</th>
+              <th className="text-left py-3 px-4 font-semibold">Department</th>
 
-              <th className="text-left py-2 px-4 font-medium">Actions</th>
+              <th className="text-left py-3 px-4 font-semibold">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-border/30">
             {courses.map((course, index) => (
-              <tr key={index} className="border-b border-border/20 text-sm">
-                <td className="py-2 px-4">{course.code}</td>
-                <td className="py-2 px-4">{course.title}</td>
-                <td className="py-2 px-4">{course.teacher}</td>
-                <td className="py-2 px-4">{course.students?.length || 0}</td>
-                <td className="py-2 px-4">{course.semester}</td>
-                <td className="py-2 px-4">{course.department}</td>
+              <tr
+                key={index}
+                className="text-sm hover:bg-primary/5 transition-colors"
+              >
+                <td className="py-3 px-4">{course.code}</td>
+                <td className="py-3 px-4">{course.title}</td>
+                <td className="py-3 px-4">{course.teacher}</td>
+                <td className="py-3 px-4">{course.students?.length || 0}</td>
+                <td className="py-3 px-4">{course.semester}</td>
+                <td className="py-3 px-4">{course.department}</td>
 
-                <td className="py-2 px-4 flex">
+                <td className="py-3 px-4">
+                  <div className="flex">
                   <Link
                     href={`/admin/courses/edit/${course.id}`}
-                    className="p-1 px-3 rounded-lg border border-border hover:bg-primary hover:text-white transition cursor-pointer text-sm"
+                    className="p-1 px-3 rounded-lg border border-border/60 hover:bg-primary hover:text-white transition cursor-pointer text-xs"
                   >
                     Edit
                   </Link>
                   <button
                     onClick={() => deleteRecord(course.id)}
-                    className="p-1 px-3 rounded-lg border border-border hover:bg-danger hover:text-white transition cursor-pointer text-sm ml-2"
+                    className="p-1 px-3 rounded-lg border border-border/60 hover:bg-danger hover:text-white transition cursor-pointer text-xs ml-2"
                   >
                     Delete
                   </button>
+                  </div>
                 </td>
               </tr>
             ))}

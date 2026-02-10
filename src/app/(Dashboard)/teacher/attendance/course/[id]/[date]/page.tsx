@@ -36,29 +36,29 @@ export default function AttendanceDay() {
     }, [date, id]),
     (
       <div className="p-8">
-        <h1 className="text-2xl font-bold mb-4">
+        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary mb-4">
           Attendance for course{" "}
-          <span className="border-b-2 border-b-primary"> {id}</span> on{" "}
-          <span className="border-b-2 border-b-primary">{date}</span>
+          <span className="text-primary"> {id}</span> on{" "}
+          <span className="text-primary">{date}</span>
         </h1>
-        <table className="w-full border-collapse border-spacing-0">
+        <table className="w-full text-sm">
           <thead>
-            <tr className="bg-background-secondary border-b border-b-border text-left text-text-muted">
-              <th className="py-2">Student Name</th>
-              <th className="py-2">Present</th>
-              <th className="py-2">Remarks</th>
+            <tr className="bg-background-secondary/40 text-left text-text-muted">
+              <th className="py-3 px-4 font-semibold">Student Name</th>
+              <th className="py-3 px-4 font-semibold">Present</th>
+              <th className="py-3 px-4 font-semibold">Remarks</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-border/30">
             {attendanceData.flatMap((dayObject, dayIndex) =>
               Object.entries(dayObject).map(([id, info]) => (
                 <tr
                   key={`${dayIndex}-${id}`}
-                  className="border-b border-b-border"
+                  className="hover:bg-primary/5 transition-colors"
                 >
-                  <td className="py-2">{FindName(id)}</td>
-                  <td className="py-2">{info.present ? "Yes" : "No"}</td>
-                  <td className="py-2">{info.remarks || "None"}</td>
+                  <td className="py-3 px-4">{FindName(id)}</td>
+                  <td className="py-3 px-4">{info.present ? "Yes" : "No"}</td>
+                  <td className="py-3 px-4">{info.remarks || "None"}</td>
                 </tr>
               )),
             )}

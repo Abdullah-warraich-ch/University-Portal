@@ -53,7 +53,9 @@ function StudentDetail() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-medium mb-4">Add Student</h1>
+      <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary mb-4">
+        Add Student
+      </h1>
       <form onSubmit={CreateStudentCredentials} className="space-y-4 ">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           <div>
@@ -205,7 +207,7 @@ function StudentDetail() {
         </div>
         <button
           type="submit"
-          className="p-2 px-4 rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer"
+          className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/90 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
         >
           {loading ? (
             <span className="flex items-center gap-2">

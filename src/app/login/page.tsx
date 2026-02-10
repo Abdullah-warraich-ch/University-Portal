@@ -68,7 +68,9 @@ export default function Login() {
           onSubmit={handleLogin}
           className="flex flex-col w-1/2 mx-auto gap-8"
         >
-          <h1 className="text-3xl font-bold mb-4">Login</h1>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-text-primary mb-4">
+            Login
+          </h1>
           <div className="">
             <input
               value={email}
@@ -89,7 +91,7 @@ export default function Login() {
           </div>
           <button
             type="submit"
-            className="bg-primary text-white p-2 rounded mt-4 flex items-center justify-center gap-2"
+            className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -109,7 +111,7 @@ export default function Login() {
         </form>
       </div>
       <div className="w-1/2 bg-primary h-full flex flex-col justify-between items-center text-center text-white ">
-        <h1 className="text-7xl font-bold mt-7 ">
+        <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight mt-7">
           Welcome to
           <br />
           VU<span className="text-danger">.</span>

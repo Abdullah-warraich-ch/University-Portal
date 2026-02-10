@@ -54,7 +54,9 @@ function AddAssignment() {
   const [DueDate, setDueDate] = useState(dueDate);
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Add Assignment</h1>
+      <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary mb-4">
+        Add Assignment
+      </h1>
       <form className="space-y-4">
         <div>
           <label className="block mb-1 font-medium">Type</label>
@@ -143,7 +145,7 @@ function AddAssignment() {
         <button
           onClick={AddAssignment}
           type="submit"
-          className="bg-primary text-white px-4 py-2 rounded"
+          className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
         >
           Add Assignment
         </button>

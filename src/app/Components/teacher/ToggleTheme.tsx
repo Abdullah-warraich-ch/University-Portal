@@ -17,7 +17,10 @@ function ToggleTheme() {
     }
   }
   return (
-    <button onClick={toggleTheme}>
+    <button
+      onClick={toggleTheme}
+      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/40 bg-background-secondary/30 text-text-muted transition hover:bg-primary/5 hover:text-text-primary focus-visible:ring-2 focus-visible:ring-primary/40"
+    >
       {theme === "dark" ? (
         <Sun size={18} className="text-text-muted" />
       ) : (

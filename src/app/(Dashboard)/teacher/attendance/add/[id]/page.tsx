@@ -75,7 +75,7 @@ function Add() {
   console.log(attendance);
   return (
     <div className="p-8">
-      <h1 className="text-xl font-bold">
+      <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary">
         Add Attendance for {CurrentCourse?.title}
       </h1>
       <div>
@@ -90,23 +90,22 @@ function Add() {
             />
           </div>
           <div>
-            <table className="w-full border border-border">
+            <table className="w-full text-sm border border-border/40 rounded-xl overflow-hidden">
               <thead>
-                <tr className="">
-                  <th className="border border-border px-4 py-2">
-                    Student Name
-                  </th>
-                  <th className="border border-border px-4 py-2">Present</th>
-                  <th className="border border-border px-4 py-2">Remarks</th>
+                <tr className="bg-background-secondary/40 text-left text-text-muted">
+                  <th className="px-4 py-3 font-semibold">Student Name</th>
+                  <th className="px-4 py-3 font-semibold">Present</th>
+                  <th className="px-4 py-3 font-semibold">Remarks</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-border/30">
                 {students.map((student) => (
-                  <tr key={student.uid}>
-                    <td className="border border-border px-4 py-2">
-                      {student.name}
-                    </td>
-                    <td className="border border-border px-4 py-2 text-center">
+                  <tr
+                    key={student.uid}
+                    className="hover:bg-primary/5 transition-colors"
+                  >
+                    <td className="px-4 py-3">{student.name}</td>
+                    <td className="px-4 py-3 text-center">
                       <input
                         type="checkbox"
                         checked={attendance[student.uid]?.present || false}
@@ -115,7 +114,7 @@ function Add() {
                         }
                       />
                     </td>
-                    <td className="border border-border ">
+                    <td className="px-4 py-3">
                       <input
                         type="text"
                         placeholder="Remarks"
@@ -123,7 +122,7 @@ function Add() {
                         onChange={(e) =>
                           handleRemarksChange(student.uid, e.target.value)
                         }
-                        className="w-full h-full  rounded  p-3 "
+                        className="w-full rounded-lg border border-border/40 bg-background px-3 py-2"
                       />
                     </td>
                   </tr>
@@ -133,7 +132,7 @@ function Add() {
           </div>
           <button
             type="submit"
-            className="bg-primary font-medium hover:bg-primary/80 cursor-pointer text-white px-4 py-2 rounded"
+            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
           >
             Submit Attendance
           </button>

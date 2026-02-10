@@ -87,26 +87,25 @@ function Grade() {
   };
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">
+      <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary mb-4">
         {AssignmentName(assignments?.type)} Grades
       </h1>
-      <div>
-        <table className="w-full border-0">
+      <div className="border border-border/40 rounded-2xl bg-background-secondary/20 p-4">
+        <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-text-muted">
-              <th className="py-2 px-4  border-b border-b-border">
-                Student Name
-              </th>
-              <th className="py-2 px-4 border-b border-b-border">Grade</th>
+            <tr className="bg-background-secondary/40 text-left text-text-muted">
+              <th className="py-3 px-4 font-semibold">Student Name</th>
+              <th className="py-3 px-4 font-semibold">Grade</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-border/30">
             {students?.map((student: DocumentData) => (
-              <tr key={student.uid}>
-                <td className="py-2 px-4 border-b border-b-border">
-                  {student.name}
-                </td>
-                <td className="py-2 px-4 border-b border-b-border">
+              <tr
+                key={student.uid}
+                className="hover:bg-primary/5 transition-colors"
+              >
+                <td className="py-3 px-4">{student.name}</td>
+                <td className="py-3 px-4">
                   <input
                     type="number"
                     value={marks[student.uid] || ""}
@@ -117,7 +116,7 @@ function Grade() {
                       })
                     }
                     required
-                    className="outline-1 bg-secondary/20 outline-primary rounded w-10 mr-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="outline-1 bg-secondary/20 outline-primary rounded w-12 mr-2 px-2 py-1 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                   /{assignments?.totalMarks}
                 </td>
@@ -129,10 +128,7 @@ function Grade() {
       <div className="mt-4 flex w-full justify-center items-center">
         <button
           onClick={setMarksForStudent}
-          className="gradient-primary inline-flex items-center justify-center gap-2 rounded-lg
-         bg-primary px-4 py-2 text-sm font-medium text-white
-         transition hover:opacity-90 active:scale-[0.98]
-         focus-visible:ring-2 focus-visible:ring-primary/50"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
         >
           Save Grades
         </button>

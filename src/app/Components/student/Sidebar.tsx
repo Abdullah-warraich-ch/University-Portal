@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
-import { Book, LayoutDashboard } from "lucide-react";
+import { Book, LayoutDashboard, ChevronUp,ChevronDown } from "lucide-react";
 import { PiStudent } from "react-icons/pi";
-import { GiTeacher } from "react-icons/gi";
-import { RiBuilding2Fill } from "react-icons/ri";
+
+
 import { MdSettings } from "react-icons/md";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,9 +15,7 @@ import React from "react";
 
 function Sidebar() {
   const router = useRouter();
-  const { teachers, students, currentUser, currentUserRecord } =
-    React.useContext(FirebaseContext)!;
-  const [openCourses, setOpenCourses] = React.useState(false);
+  const { currentUserRecord } = React.useContext(FirebaseContext)!;
 
   async function Logout() {
     try {
@@ -30,11 +28,12 @@ function Sidebar() {
       console.error("Error signing out:", error);
     }
   }
-  const sactive: string = "text-primary font-bold bg-primary/10 rounded-lg";
+  const sactive: string =
+    "text-primary font-semibold bg-primary/10 border border-primary/20 shadow-sm";
   const pathname = usePathname();
   return (
-    <div className="w-full h-screen p-10 border-r border-r-border/20">
-      <div className="flex items-center mb-10 border-b border-b-border/20  pb-4">
+    <div className="w-full h-screen p-6 border-r border-r-border/30 bg-background/70 backdrop-blur-sm">
+      <div className="flex items-center mb-8 border-b border-b-border/30 pb-4">
         <Image
           src="/admin.png"
           alt="Logo"
@@ -42,46 +41,62 @@ function Sidebar() {
           height={35}
           className="object-contain"
         />
-        <h2 className="text-text-primary  text-wrap font-black text-xl ml-2">
+        <h2 className="text-text-primary text-wrap font-extrabold tracking-tight text-lg ml-2">
           University LMS
         </h2>
       </div>
-      <div className="flex flex-col  font-medium">
+      <div className="flex flex-col font-medium space-y-1">
         <Link
           href="/student"
-          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/student" ? sactive : "text-text-muted"}`}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
+            pathname === "/student"
+              ? sactive
+              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+          }`}
         >
           <LayoutDashboard className="" size={20} /> Dashboard
         </Link>
         <button
-          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/student/courses" ? sactive : "text-text-muted"}`}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
+            pathname === "/student/courses"
+              ? sactive
+              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+          }`}
         >
           <Book className="" size={20} /> Courses
         </button>
         <Link
           href="/student/students"
-          className={`flex items-center p-2 gap-2 transition-colors duration-200 ease-in-out ${pathname === "/teacher/students" ? sactive : "text-text-muted"}`}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
+            pathname === "/teacher/students"
+              ? sactive
+              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+          }`}
         >
-          <PiStudent className="" size={20} /> Attendance
+          <PiStudent className="" size={20} /> Attendance 
         </Link>
 
         <Link
           href="/student/settings"
-          className={`flex items-center p-2 gap-2 ${pathname === "/teacher/settings" ? sactive : "text-text-muted"}`}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
+            pathname === "/teacher/settings"
+              ? sactive
+              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+          }`}
         >
           <MdSettings className="" size={20} /> Settings
         </Link>
       </div>
 
-      <div className="flex flex-col mt-15 justify-center gap-1 items-center">
+      <div className="mt-10 rounded-xl border border-border/30 bg-background-secondary/30 p-4 flex flex-col justify-center gap-1 items-center">
         <Image
           src="/man.png"
           alt="Profile"
           width={40}
           height={40}
-          className=" object-contain"
+          className="object-contain"
         />
-        <h4 className="text-text-primary font-black">
+        <h4 className="text-text-primary font-semibold text-center">
           {currentUserRecord?.name || "Dummy Name"}
         </h4>
         <p className="text-text-muted text-xs font-medium">
@@ -89,11 +104,11 @@ function Sidebar() {
         </p>
         <button
           onClick={Logout}
-          className="w-full bg-primary font-medium rounded-lg p-1"
+          className="w-full inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
         >
           Logout
         </button>
-        <p className="text-sm text-text-muted border border-border p-1 px-2 rounded-full mt-1">
+        <p className="text-xs text-text-muted border border-border/40 px-3 py-1 rounded-full mt-2">
           {" "}
           {new Date().toLocaleString("en-PK", {
             day: "2-digit",

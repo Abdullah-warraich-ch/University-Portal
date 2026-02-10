@@ -31,11 +31,11 @@ function View() {
   }, [id, type]);
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold  border-b-2 border-b-primary mb-7 inline-block">
+      <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary mb-6">
         View Grade
       </h1>
       <div>
-        <h1 className="text-xl font-semibold">
+        <h1 className="text-lg font-semibold tracking-tight text-text-primary">
           {taskData?.title?.toUpperCase()}
         </h1>
       </div>
@@ -49,22 +49,25 @@ function View() {
           {taskData?.totalMarks}
         </p>
       </div>
-      <div>
-        <table className="w-full rounded">
+      <div className="border border-border/40 rounded-2xl bg-background-secondary/20 p-4">
+        <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-b-border text-left">
-              <th className="px-4 py-2">Student Name</th>
-              <th className="px-4 py-2">Marks Obtained</th>
-              <th className="px-4 py-2">Percentage</th>
+            <tr className="bg-background-secondary/40 text-left text-text-muted">
+              <th className="px-4 py-3 font-semibold">Student Name</th>
+              <th className="px-4 py-3 font-semibold">Marks Obtained</th>
+              <th className="px-4 py-3 font-semibold">Percentage</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-border/30">
             {taskData?.marks &&
               Object.entries(taskData.marks).map(([studentId, marks]) => (
-                <tr key={studentId} className="border-b border-b-border">
-                  <td className="px-4 py-2">{FindName(studentId)}</td>
-                  <td className="px-4 py-2">{Number(marks)}</td>
-                  <td className="px-4 py-2">
+                <tr
+                  key={studentId}
+                  className="hover:bg-primary/5 transition-colors"
+                >
+                  <td className="px-4 py-3">{FindName(studentId)}</td>
+                  <td className="px-4 py-3">{Number(marks)}</td>
+                  <td className="px-4 py-3">
                     {(
                       (Number(marks) / Number(taskData.totalMarks)) *
                       100

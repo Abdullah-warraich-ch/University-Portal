@@ -15,20 +15,22 @@ function Kpicard({
   return (
     <Link
       href={to}
-      className="p-4 bg-card group rounded-lg h-auto shadow-md  flex justify-between items-center mb-4 hover:shadow-lg transition-shadow duration-200"
+      className="group rounded-2xl border border-border/40 bg-background-secondary/30 p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
     >
-      <div className="flex flex-col items-start justify-between mb-5">
-        <h3 className="text-sm font-semibold text-text-primary">
-          Title: {title}
-        </h3>
-        <h4 className="text-sm font-medium text-text-muted">
-          Course Code: {code}
-        </h4>
-        <p className="text-sm font-medium text-text-primary">
-          Instructor: <span className="text-text-muted">{teacher}</span>
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h3 className="text-base font-semibold tracking-tight text-text-primary leading-snug">
+            {title}
+          </h3>
+          <p className="mt-1 text-sm text-text-muted">{teacher}</p>
+          <span className="mt-3 inline-flex items-center rounded-full border border-border/40 px-2 py-1 text-[11px] text-text-muted">
+            {code}
+          </span>
+        </div>
+        <div className="mt-1 rounded-full border border-border/40 p-2 text-text-muted transition-all group-hover:text-text-primary group-hover:border-primary/40 group-hover:bg-primary/5">
+          <MoveRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+        </div>
       </div>
-      <MoveRight className="text-gray-400 group-hover:translate-x-1 transition-transform duration-200" />
     </Link>
   );
 }

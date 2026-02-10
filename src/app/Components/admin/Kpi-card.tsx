@@ -13,13 +13,19 @@ function Kpicard({
   return (
     <Link
       href={to}
-      className="p-4 bg-card group rounded-lg h-auto shadow-md w-64"
+      className="group rounded-2xl border border-border/40 bg-background-secondary/30 p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
     >
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold text-text-muted">{title}</h3>
-        <MoveRight className="text-gray-400 group-hover:translate-x-1 transition-transform duration-200" />
+      <div className="flex items-start justify-between gap-4">
+        <h3 className="text-sm font-semibold tracking-tight text-text-primary">
+          {title}
+        </h3>
+        <div className="rounded-full border border-border/40 p-2 text-text-muted transition-all group-hover:text-text-primary group-hover:border-primary/40 group-hover:bg-primary/5">
+          <MoveRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+        </div>
       </div>
-      <p className="text-3xl font-medium text-text-primary">{value}</p>
+      <div className="mt-3 text-3xl font-semibold text-text-primary">
+        {value}
+      </div>
     </Link>
   );
 }
