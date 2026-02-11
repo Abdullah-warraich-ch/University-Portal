@@ -1,6 +1,5 @@
 import React from "react";
 import { Bell, MessageCircle, Search } from "lucide-react";
-import Image from "next/image";
 import ToggleTheme from "@/app/Components/admin/ToggleTheme";
 
 function Header() {
