@@ -78,9 +78,9 @@ Access the different portals using the credentials below:
 
 | Role | Email | Password |
 | :--- | :--- | :--- |
-| **Admin** | `admin@university.com` | `admin123` |
-| **Teacher** | `teacher@university.com` | `teacher123` |
-| **Student** | `student@university.com` | `student123` |
+| **Admin** | `admin@vu.edu.pk` | `admin123` |
+| **Teacher** | `teacher@vu.edu.pk` | `teacher123` |
+| **Student** | `student@vu.edu.pk` | `student123` |
 
 > **Note:** Ensure these users are created in your Firebase Auth and have a corresponding document in the `users` collection with the matching `role` field (`admin`, `teacher`, or `student`).
 
