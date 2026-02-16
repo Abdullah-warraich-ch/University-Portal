@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import { getDocs, doc, collection, addDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import {Spinner} from "@/components/ui/spinner";
+import { Spinner } from "@/app/Components/ui/spinner";
 function TeacherDetail() {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
@@ -201,12 +201,12 @@ function TeacherDetail() {
           className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/90 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
         >
           {loading ? (
-              <span className="flex items-center gap-2">
-                <Spinner className="w-5 h-5" /> Creating Account
-              </span>
-            ) : (
-              "Create Teacher Account"
-            )}
+            <span className="flex items-center gap-2">
+              <Spinner className="w-5 h-5" /> Creating Account
+            </span>
+          ) : (
+            "Create Teacher Account"
+          )}
         </button>
       </form>
     </div>

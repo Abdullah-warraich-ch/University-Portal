@@ -200,7 +200,7 @@ import React, { useEffect } from "react";
 import { db } from "@/app/Firebase";
 import { getDoc, doc, setDoc } from "firebase/firestore";
 import { useRouter, useParams } from "next/navigation";
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/app/Components/ui/spinner";
 import { FirebaseContext } from "@/app/Context";
 
 function EditCourseDetail() {

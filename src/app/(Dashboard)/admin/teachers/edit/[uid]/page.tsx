@@ -15,7 +15,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/app/Components/ui/spinner";
 import { useParams } from "next/navigation";
 
 function EditTeacherDetail() {

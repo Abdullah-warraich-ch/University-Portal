@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import { getDocs, doc, collection, addDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/app/Components/ui/spinner";
 
 function StudentDetail() {
   const [loading, setLoading] = React.useState(false);

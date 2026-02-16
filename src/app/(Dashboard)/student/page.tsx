@@ -11,6 +11,7 @@ import { db } from "@/app/Firebase";
 import Kpicard from "@/app/Components/student/Kpi-card";
 import Heading from "@/app/Components/universal/Heading";
 import AverageAttendance from "@/app/Components/student/divs/AverageAttendance";
+import UpcomingAssignments from "@/app/Components/student/divs/UpcommingAssignments";
 
 function Student() {
   const { currentUserRecord, enrolledCourses, availableCourses } = useContext(
@@ -119,6 +120,7 @@ function Student() {
         </div>
         <div className="pt-8">
           <Heading>Upcoming Assignments</Heading>
+          <UpcomingAssignments />
         </div>
       </div>
 

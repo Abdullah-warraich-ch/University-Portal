@@ -5,7 +5,8 @@ import React, { useEffect } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/app/Components/ui/spinner";
+import { toast } from "sonner";
 
 export default function Login() {
   const [loading, setLoading] = React.useState(false);
@@ -24,11 +25,14 @@ export default function Login() {
       .split(";")
       .find((row) => row.trim().startsWith("token="))
       ?.split("=")[1];
+
     if (token && role) {
-      router.push(`/${role}`);
+      // Redirect logged-in users immediately
+      router.replace(`/${role}`);
+      return; // ✅ Important: stop further execution
     }
 
-    console.log(document.cookie);
+    // Visitors see the toast
   }, [router]);
 
   async function handleLogin(e: React.FormEvent) {
@@ -58,6 +62,7 @@ export default function Login() {
     } catch (error) {
       console.error("Error logging in:", error);
       setLoading(false);
+      toast.error("Invalid email or password");
       setError("Invalid email or password");
     }
   }
@@ -101,14 +106,44 @@ export default function Login() {
               "Login"
             )}
           </button>
-          <p>
-            {error ? (
-              <span className="text-red-500">{error}</span>
-            ) : (
-              <span className="opacity-0">Errooooooooooooooooooor</span>
-            )}
-          </p>
         </form>
+        <div className="w-1/2 mx-auto mt-10">
+          <h1 className="tracking-tight text-xl font-extrabold">
+            Test Credentials
+          </h1>
+          <div className="flex justify-between gap-4 ">
+            <button
+              onClick={() =>
+                toast("Student Credentials", {
+                  description: "student@vu.edu.pk | student123",
+                })
+              }
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
+              Student
+            </button>
+            <button
+              onClick={() =>
+                toast("Teacher Credentials", {
+                  description: "teacher@vu.edu.pk | teacher123",
+                })
+              }
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
+              Teacher
+            </button>
+            <button
+              onClick={() =>
+                toast("Admin Credentials", {
+                  description: "admin@vu.edu.pk | admin123",
+                })
+              }
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
+              Admin
+            </button>
+          </div>
+        </div>
       </div>
       <div className="w-1/2 bg-primary h-full flex flex-col justify-between items-center text-center text-white ">
         <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight mt-7">
