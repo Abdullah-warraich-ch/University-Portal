@@ -1,49 +1,39 @@
 "use client";
 
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import Header from "@/app/Components/student/Header";
 import Sidebar from "@/app/Components/student/Sidebar";
 
 function Layout({ children }: { children: React.ReactNode }) {
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  const [sidebarWidth, setSidebarWidth] = useState<number | null>(null);
-
-  useLayoutEffect(() => {
-    if (!sidebarRef.current) return;
-
-    const updateWidth = () => {
-      setSidebarWidth(sidebarRef.current!.offsetWidth);
-    };
-
-    updateWidth();
-
-    const observer = new ResizeObserver(updateWidth);
-    observer.observe(sidebarRef.current);
-
-    return () => observer.disconnect();
-  }, []);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <>
-      {/* Fixed Sidebar */}
-      <div ref={sidebarRef} className="fixed left-0 top-0 h-screen">
-        <Sidebar />
+    <div className="flex h-screen max-w-full mx-auto bg-background overflow-hidden">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - Desktop and Mobile */}
+      <div className={`
+        fixed inset-y-0 left-0 z-50 w-72 bg-background border-r border-border transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+      `}>
+        <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
 
-      {/* Main Content */}
-      <div
-        className="min-h-screen max-w-full mx-auto "
-        style={{
-          marginLeft: sidebarWidth ?? 0,
-          visibility: sidebarWidth === null ? "hidden" : "visible",
-        }}
-      >
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          {children}
-        </div>
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <Header onMenuClick={() => setIsSidebarOpen(true)} />
+        <main className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
+          <div className="max-w-[1600px] mx-auto min-h-full">
+            {children}
+          </div>
+        </main>
       </div>
-    </>
+    </div>
   );
 }
 

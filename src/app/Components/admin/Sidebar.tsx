@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Book, LayoutDashboard } from "lucide-react";
+import { Book, LayoutDashboard, Menu, X } from "lucide-react";
 import { PiStudent } from "react-icons/pi";
 import { GiTeacher } from "react-icons/gi";
 import { RiBuilding2Fill } from "react-icons/ri";
@@ -11,7 +11,11 @@ import { auth } from "@/app/Firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
-function Sidebar() {
+interface SidebarProps {
+  onClose?: () => void;
+}
+
+function Sidebar({ onClose }: SidebarProps) {
   const router = useRouter();
   async function Logout() {
     try {
@@ -24,116 +28,135 @@ function Sidebar() {
       console.error("Error signing out:", error);
     }
   }
-  const sactive: string =
+
+  const sactive =
     "text-primary font-semibold bg-primary/10 border border-primary/20 shadow-sm";
   const pathname = usePathname();
+
   return (
-    <div className="w-[20%] h-screen p-6 border-r border-r-border/30 bg-background/70 backdrop-blur-sm">
-      <div className="flex items-center mb-8 border-b border-b-border/30 pb-4">
-        <Image
-          src="/admin.png"
-          alt="Logo"
-          width={35}
-          height={35}
-          className="object-contain"
-        />
-        <h2 className="text-text-primary text-wrap font-extrabold tracking-tight text-lg ml-2">
-          University LMS
-        </h2>
+    <div className="flex flex-col h-full p-4 lg:p-6 bg-background/70 backdrop-blur-sm">
+      <div className="flex items-center justify-between mb-8 border-b border-b-border/30 pb-4">
+        <div className="flex items-center">
+          <Image
+            src="/admin.png"
+            alt="Logo"
+            width={35}
+            height={35}
+            className="object-contain"
+          />
+          <h2 className="text-text-primary text-wrap font-extrabold tracking-tight text-lg ml-2">
+            University LMS
+          </h2>
+        </div>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="lg:hidden p-2 text-text-muted hover:text-text-primary rounded-lg"
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
-      <div className="flex flex-col font-medium space-y-1">
+
+      <div className="flex-1 flex flex-col font-medium space-y-1">
         <Link
           href="/admin"
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/admin"
-              ? sactive
-              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-          }`}
+          onClick={onClose}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${pathname === "/admin"
+            ? sactive
+            : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+            }`}
         >
-          <LayoutDashboard className="" size={20} /> Dashboard
+          <LayoutDashboard size={20} /> Dashboard
         </Link>
         <Link
           href="/admin/courses"
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/admin/courses"
-              ? sactive
-              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-          }`}
+          onClick={onClose}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${pathname === "/admin/courses"
+            ? sactive
+            : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+            }`}
         >
-          <Book className="" size={20} /> Courses
+          <Book size={20} /> Courses
         </Link>
         <Link
           href="/admin/students"
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/admin/students"
-              ? sactive
-              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-          }`}
+          onClick={onClose}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${pathname === "/admin/students"
+            ? sactive
+            : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+            }`}
         >
-          <PiStudent className="" size={20} /> Students
+          <PiStudent size={20} /> Students
         </Link>
         <Link
           href="/admin/teachers"
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/admin/teachers"
-              ? sactive
-              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-          }`}
+          onClick={onClose}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${pathname === "/admin/teachers"
+            ? sactive
+            : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+            }`}
         >
-          <GiTeacher className="" size={20} /> Teachers
+          <GiTeacher size={20} /> Teachers
         </Link>
         <Link
           href="/admin/departments"
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/admin/departments"
-              ? sactive
-              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-          }`}
+          onClick={onClose}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${pathname === "/admin/departments"
+            ? sactive
+            : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+            }`}
         >
-          <RiBuilding2Fill className="" size={20} /> Departments
+          <RiBuilding2Fill size={20} /> Departments
         </Link>
         <Link
           href="/admin/settings"
-          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/admin/settings"
-              ? sactive
-              : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-          }`}
+          onClick={onClose}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${pathname === "/admin/settings"
+            ? sactive
+            : "text-text-muted hover:text-text-primary hover:bg-primary/5"
+            }`}
         >
-          <MdSettings className="" size={20} /> Settings
+          <MdSettings size={20} /> Settings
         </Link>
       </div>
 
-      <div className="mt-10 rounded-xl border border-border/30 bg-background-secondary/30 p-4 flex flex-col justify-center gap-1 items-center">
-        <Image
-          src="/man.png"
-          alt="Profile"
-          width={40}
-          height={40}
-          className="object-contain"
-        />
-        <h4 className="text-text-primary font-semibold text-center">
-          Muhammad Abdullah
-        </h4>
-        <p className="text-text-muted text-xs font-medium">Admin</p>
-        <button
-          onClick={Logout}
-          className="w-full inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
-        >
-          Logout
-        </button>
-        <p className="text-xs text-text-muted border border-border/40 px-3 py-1 rounded-full mt-2">
-          {" "}
-          {new Date().toLocaleString("en-PK", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
-            timeZone: "Asia/Karachi",
-          })}
-        </p>
+      <div className="mt-auto pt-6 border-t border-border/30">
+        <div className="rounded-xl border border-border/30 bg-background-secondary/30 p-4 flex flex-col items-center gap-2">
+          <div className="relative group">
+            <Image
+              src="/man.png"
+              alt="Profile"
+              width={40}
+              height={40}
+              className="object-contain rounded-full transition-transform group-hover:scale-110"
+            />
+            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-success rounded-full border-2 border-background" />
+          </div>
+          <div className="text-center">
+            <h4 className="text-text-primary font-semibold text-sm">
+              Muhammad Abdullah
+            </h4>
+            <p className="text-text-muted text-[10px] font-medium uppercase tracking-wider">
+              Admin
+            </p>
+          </div>
+          <button
+            onClick={Logout}
+            className="w-full inline-flex items-center justify-center rounded-lg bg-danger/10 text-danger px-4 py-2 text-xs font-bold transition hover:bg-danger hover:text-white active:scale-[0.98]"
+          >
+            Logout
+          </button>
+          <div className="text-[10px] text-text-muted bg-background/50 border border-border/40 px-2 py-1 rounded-full mt-1">
+            {new Date().toLocaleString("en-PK", {
+              day: "2-digit",
+              month: "short",
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
