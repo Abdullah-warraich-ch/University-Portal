@@ -13,34 +13,34 @@ function Kpicard({ title, teacher, to, code }: KpiCardProps) {
   return (
     <Link
       href={to}
-      className="group relative overflow-hidden rounded-2xl border border-border/40 bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/30"
+      className="group relative overflow-hidden rounded-[2rem] border border-border/40 bg-card/40 backdrop-blur-xl p-8 shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:border-primary/40"
     >
-      <div className="absolute top-0 right-0 -m-4 h-24 w-24 rounded-full bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl" />
+      <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-primary/10 opacity-0 group-hover:opacity-20 transition-opacity duration-700 blur-3xl" />
 
-      <div className="flex items-start justify-between mb-4">
-        <div className="p-2.5 rounded-xl border border-primary/20 bg-primary/5 text-primary transition-colors duration-300">
-          <GraduationCap className="h-5 w-5" />
+      <div className="flex items-start justify-between mb-6">
+        <div className="p-4 rounded-2xl border border-primary/20 bg-primary/10 text-primary transition-all duration-500 group-hover:scale-110 shadow-lg shadow-primary/5">
+          <GraduationCap size={22} />
         </div>
-        <div className="rounded-full border border-border/40 p-2 text-text-muted transition-all group-hover:text-primary group-hover:border-primary/30 group-hover:bg-primary/5">
-          <MoveRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+        <div className="rounded-xl border border-border/20 p-2 text-text-muted transition-all group-hover:text-primary group-hover:border-primary/40 group-hover:bg-primary/5 group-hover:scale-110">
+          <MoveRight size={16} className="group-hover:translate-x-1 transition-transform" />
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4 relative z-10">
         <div>
-          <h3 className="text-base font-bold text-text-primary leading-tight group-hover:text-primary transition-colors">
+          <h3 className="text-lg font-black tracking-tight text-text-primary group-hover:text-primary transition-colors leading-snug">
             {title}
           </h3>
-          <p className="text-sm text-text-muted mt-1 italic">
+          <p className="text-[10px] font-black uppercase tracking-widest text-text-muted/60 mt-1">
             {teacher}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center rounded-lg bg-background-secondary/50 border border-border/40 px-2 py-1 text-[11px] font-mono text-text-muted transition-colors group-hover:border-primary/30 group-hover:text-primary">
+          <span className="inline-flex items-center rounded-lg bg-background-secondary/50 border border-border/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-text-muted transition-colors group-hover:border-primary/40 group-hover:text-primary">
             {code}
           </span>
-          <span className="h-1 w-1 rounded-full bg-border" />
-          <span className="text-[11px] text-text-muted">Semester Grade</span>
+          <span className="h-1 w-1 rounded-full bg-border/40" />
+          <span className="text-[10px] font-black uppercase tracking-widest text-text-muted/40">Registered</span>
         </div>
       </div>
     </Link>

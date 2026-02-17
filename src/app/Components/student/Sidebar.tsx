@@ -60,8 +60,8 @@ const NavLink = ({
       <button
         onClick={onClick}
         className={`w-full group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-300 ${isActive || isOpen
-            ? "text-primary bg-primary/5 shadow-[inset_0_0_20px_rgba(146,95,226,0.02)]"
-            : "text-text-muted hover:text-text-primary hover:bg-white/5"
+          ? "text-primary bg-primary/5 shadow-[inset_0_0_20px_rgba(146,95,226,0.02)]"
+          : "text-text-muted hover:text-text-primary hover:bg-white/5"
           }`}
       >
         {content}
@@ -74,8 +74,8 @@ const NavLink = ({
       href={href || "#"}
       onClick={onClick}
       className={`group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-300 ${isActive
-          ? "text-primary bg-primary/5 shadow-[inset_0_0_20px_rgba(146,95,226,0.02)]"
-          : "text-text-muted hover:text-text-primary hover:bg-white/5"
+        ? "text-primary bg-primary/5 shadow-[inset_0_0_20px_rgba(146,95,226,0.02)]"
+        : "text-text-muted hover:text-text-primary hover:bg-white/5"
         }`}
     >
       {content}
@@ -134,7 +134,7 @@ function Sidebar({ onClose }: SidebarProps) {
               <h2 className="text-text-primary font-black tracking-tighter text-xl leading-none uppercase">
                 VU<span className="text-primary">.</span>PORTAL
               </h2>
-              <p className="text-[10px] text-text-muted font-bold tracking-[0.2em] uppercase mt-1 opacity-60">Learning Dashboard</p>
+              <p className="text-[10px] text-text-muted font-bold tracking-[0.2em] uppercase mt-1 opacity-60">Student Portal</p>
             </div>
           </div>
           {onClose && (
@@ -149,14 +149,14 @@ function Sidebar({ onClose }: SidebarProps) {
       </div>
 
       {/* Navigation Groups */}
-      <div className="flex-1 px-4 space-y-8 overflow-y-auto py-4">
+      <div className="flex-1 px-4 space-y-8 overflow-y-auto py-4 premium-scrollbar">
         <div>
-          <p className="px-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-4 opacity-50">Academic Path</p>
+          <p className="px-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-4 opacity-50">My Learning</p>
           <div className="space-y-1.5">
             <NavLink
               href="/student"
               icon={LayoutDashboard}
-              label="Home Feed"
+              label="Dashboard"
               isActive={pathname === "/student"}
               onClick={() => onClose?.()}
             />
@@ -179,8 +179,8 @@ function Sidebar({ onClose }: SidebarProps) {
                       href={`/student/grades/${code}`}
                       onClick={onClose}
                       className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-all duration-200 ${pathname === `/student/grades/${code}`
-                          ? "text-primary font-bold bg-primary/5"
-                          : "text-text-muted hover:text-text-primary hover:bg-white/5"
+                        ? "text-primary font-bold bg-primary/5"
+                        : "text-text-muted hover:text-text-primary hover:bg-white/5"
                         }`}
                     >
                       <span className={`w-1.5 h-1.5 rounded-full ${pathname === `/student/grades/${code}` ? "bg-primary" : "bg-text-muted/30"}`} />
@@ -209,8 +209,8 @@ function Sidebar({ onClose }: SidebarProps) {
                       href={`/student/attendance/${code}`}
                       onClick={onClose}
                       className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-all duration-200 ${pathname === `/student/attendance/${code}`
-                          ? "text-primary font-bold bg-primary/5"
-                          : "text-text-muted hover:text-text-primary hover:bg-white/5"
+                        ? "text-primary font-bold bg-primary/5"
+                        : "text-text-muted hover:text-text-primary hover:bg-white/5"
                         }`}
                     >
                       <span className={`w-1.5 h-1.5 rounded-full ${pathname === `/student/attendance/${code}` ? "bg-primary" : "bg-text-muted/30"}`} />
@@ -248,7 +248,7 @@ function Sidebar({ onClose }: SidebarProps) {
                 {currentUserRecord?.name || "Student"}
               </h4>
               <div className="flex items-center justify-center gap-1 text-[9px] text-primary font-black tracking-widest uppercase">
-                <Sparkles size={8} /> Scholar
+                <Sparkles size={8} /> Student
               </div>
             </div>
 
@@ -259,7 +259,7 @@ function Sidebar({ onClose }: SidebarProps) {
               <LogOut size={14} className="group-hover/btn:-translate-x-1 transition-transform" />
               Sign Out
             </button>
-            <p className="text-[9px] text-text-muted mt-1 opacity-60">ID: {currentUserRecord?.uid?.substring(0, 8) || "********"}</p>
+            <p className="text-[9px] text-text-muted mt-1 opacity-60">Student ID: {currentUserRecord?.uid?.substring(0, 8) || "********"}</p>
           </div>
         </div>
       </div>

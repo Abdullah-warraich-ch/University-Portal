@@ -67,7 +67,7 @@ function StudentDetail() {
   async function CreateStudentCredentials(e: React.FormEvent) {
     e.preventDefault();
     if (!studentEmail || !studentPassword || !studentName || !studentId) {
-      alert("Primary identification fields are required.");
+      alert("Email, password, and name are required.");
       return;
     }
     setLoading(true);
@@ -109,14 +109,14 @@ function StudentDetail() {
             className="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors text-xs font-black uppercase tracking-widest mb-4 group"
           >
             <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            Core Directory
+            Student List
           </Link>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-lg shadow-primary/5">
               <UserPlus size={24} />
             </div>
-            <h1 className="text-3xl font-black tracking-tight text-text-primary">
-              Scholar Registration <span className="text-primary">.</span>
+            <h1 className="text-3xl font-black tracking-tight text-text-primary uppercase leading-tight">
+              Add New Student <span className="text-primary">.</span>
             </h1>
           </div>
         </div>
@@ -132,10 +132,10 @@ function StudentDetail() {
 
             <form onSubmit={CreateStudentCredentials} className="space-y-8 relative z-10">
               <div className="space-y-6">
-                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Authentication Credentials</p>
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Account Details</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormInput
-                    label="Academic Email"
+                    label="Email Address"
                     icon={Mail}
                     value={studentEmail}
                     onChange={(e: any) => setStudentEmail(e.target.value)}
@@ -143,7 +143,7 @@ function StudentDetail() {
                     type="email"
                   />
                   <FormInput
-                    label="Secure Keypad"
+                    label="Password"
                     icon={Lock}
                     value={studentPassword}
                     onChange={(e: any) => setStudentPassword(e.target.value)}
@@ -154,34 +154,34 @@ function StudentDetail() {
               </div>
 
               <div className="space-y-6">
-                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Personal Identity</p>
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Personal Info</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormInput
-                    label="Legal Full Name"
+                    label="Full Name"
                     icon={User}
                     value={studentName}
                     onChange={(e: any) => setStudentName(e.target.value)}
-                    placeholder="Alexander Pierce"
+                    placeholder="e.g. Abdullah Khan"
                   />
                   <FormInput
-                    label="Institutional ID"
+                    label="Student ID"
                     icon={Hash}
                     value={studentId}
                     onChange={(e: any) => setStudentId(e.target.value)}
                     placeholder="VU-2026-001"
                   />
                   <FormInput
-                    label="Direct Contact"
+                    label="Phone Number"
                     icon={Phone}
                     value={studentPhone}
                     onChange={(e: any) => setStudentPhone(e.target.value)}
-                    placeholder="+92 3XX XXXXXXX"
+                    placeholder="+91 XXXXXXXXXX"
                   />
                 </div>
               </div>
 
               <div className="space-y-6">
-                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Academic Placement</p>
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">University Info</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormSelect
                     label="Department"
@@ -193,7 +193,7 @@ function StudentDetail() {
                       { value: "Mathematics", label: "Mathematics" },
                       { value: "Physics", label: "Physics" }
                     ]}
-                    placeholder="Assigned Department"
+                    placeholder="Select Department"
                   />
                   <FormSelect
                     label="Semester"
@@ -210,7 +210,7 @@ function StudentDetail() {
                       { value: "7th", label: "7th Semester" },
                       { value: "8th", label: "8th Semester" }
                     ]}
-                    placeholder="Active Semester"
+                    placeholder="Select Semester"
                   />
                 </div>
               </div>
@@ -222,7 +222,7 @@ function StudentDetail() {
                   className="flex-1 md:flex-none flex items-center justify-center gap-3 bg-primary text-white px-12 py-4 rounded-2xl font-black text-sm transition-all shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? <Spinner className="w-5 h-5 border-white" /> : <UserPlus size={18} />}
-                  {loading ? "Establishing Account..." : "Confirm Enrollment"}
+                  {loading ? "Creating..." : "Add Student"}
                 </button>
               </div>
             </form>
@@ -233,10 +233,10 @@ function StudentDetail() {
         <div className="space-y-6">
           <div className="bg-primary/5 border border-primary/20 rounded-[2rem] p-6 space-y-4">
             <h3 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-2">
-              <ShieldCheck size={14} /> Security Notice
+              <ShieldCheck size={14} /> Quick Note
             </h3>
             <p className="text-text-primary/70 text-sm leading-relaxed font-medium">
-              New student accounts are initialized with a student role. Credentials will be sent to the academic email provided.
+              Student accounts are created with student roles. An email will be sent to the student with their details.
             </p>
             <ul className="space-y-2 pt-2">
               {['Unique University ID', 'Active Status', 'AES-256 Storage'].map((item, i) => (
@@ -249,15 +249,15 @@ function StudentDetail() {
 
           <div className="bg-card/40 border border-border/20 rounded-[2rem] p-6 relative group overflow-hidden">
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors" />
-            <h3 className="text-text-muted font-black text-[10px] uppercase tracking-widest mb-4">Enrollment Live Feed</h3>
+            <h3 className="text-text-muted font-black text-[10px] uppercase tracking-widest mb-4">Student Preview</h3>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-background-secondary border border-border/50 flex items-center justify-center text-text-muted">
                   <User size={18} />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-black text-text-primary">{studentName || "Pending Name"}</span>
-                  <span className="text-[9px] font-bold text-text-muted uppercase tracking-tighter">{studentId || "ID Required"}</span>
+                  <span className="text-xs font-black text-text-primary">{studentName || "Name not set"}</span>
+                  <span className="text-[9px] font-bold text-text-muted uppercase tracking-tighter">{studentId || "ID not set"}</span>
                 </div>
               </div>
               <div className="flex flex-col gap-2 pt-2 border-t border-border/10">
@@ -266,7 +266,7 @@ function StudentDetail() {
                   <span className="text-primary">{studentDepartment || "---"}</span>
                 </div>
                 <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-tighter">
-                  <span className="text-text-muted">Phase</span>
+                  <span className="text-text-muted">Semester</span>
                   <span className="text-primary">{studentSemester || "---"}</span>
                 </div>
               </div>

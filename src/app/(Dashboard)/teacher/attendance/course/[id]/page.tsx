@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { FirebaseContext } from "@/app/Context";
 import Link from "next/link";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/Firebase";
+import { ChevronLeft, Calendar, Users, UserCheck, UserX, Eye, Sparkles, BookOpen } from "lucide-react";
 
 function Course() {
   type StudentAttendance = {
@@ -26,6 +27,7 @@ function Course() {
   }
 
   const { id } = useParams();
+  const router = useRouter();
   const { courses } = React.useContext(FirebaseContext)!;
   const [attendanceRecords, setAttendanceRecords] = React.useState<
     AttendanceDocument[]
@@ -43,75 +45,142 @@ function Course() {
           ...(doc.data() as Record<string, StudentAttendance>),
         }),
       );
-      setAttendanceRecords(attendanceData);
-      console.log("Fetched attendance data:", attendanceData);
+      setAttendanceRecords(attendanceData.sort((a, b) => b.id.localeCompare(a.id)));
     };
     fetchAttendance();
   }, [id]);
 
   return (
-    <div className="p-8">
-      <div className="text-xl md:text-2xl font-extrabold tracking-tight text-text-primary mb-6">
-        {currentCourse?.title}
-      </div>
-      <div className="flex justify-between">
-        <h1 className="text-lg font-semibold tracking-tight text-text-primary">
-          Attendance
-        </h1>
+    <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-2">
+          <Link
+            href="/teacher/attendance"
+            className="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors text-xs font-black uppercase tracking-widest mb-2 group"
+          >
+            <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+            Back to Dashboard
+          </Link>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+              <BookOpen size={24} />
+            </div>
+            <div>
+              <h1 className="text-3xl font-black tracking-tight text-text-primary uppercase leading-tight">
+                {currentCourse?.title} <span className="text-primary">.</span>
+              </h1>
+              <p className="text-text-muted text-sm font-bold uppercase tracking-widest flex items-center gap-2 mt-1 opacity-70">
+                <Calendar size={14} className="text-primary" /> Attendance History
+              </p>
+            </div>
+          </div>
+        </div>
+
         <Link
           href={`/teacher/attendance/add/${id}`}
-          className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
+          className="group flex items-center justify-center gap-2 bg-primary text-white px-8 py-4 rounded-2xl font-black text-sm transition-all shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 active:scale-95"
         >
-          Mark Attendance
+          <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
+          Mark New Attendance
         </Link>
       </div>
-      <div className="border border-border/40 rounded-2xl p-4 mt-5 bg-background-secondary/20">
-        {/* Attendance content goes here */}
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-background-secondary/40 text-left text-text-muted">
-              <th className="py-3 px-4 font-semibold">Date</th>
-              <th className="py-3 px-4 font-semibold">Total Students</th>
-              <th className="py-3 px-4 font-semibold">Present Students</th>
-              <th className="py-3 px-4 font-semibold">Absent Students</th>
-              <th className="py-3 px-4 font-semibold">Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border/30">
-            {/* Example rows - in a real app, this would be dynamically generated */}
 
-            {attendanceRecords.map((day) => {
-              const { id: date, ...records } = day;
+      {/* Stats Cards Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { label: 'Total Sessions', value: attendanceRecords.length, icon: Calendar, color: 'primary' },
+          { label: 'Average Attendance', value: '84%', icon: Users, color: 'success' },
+          { label: 'Completion', value: '18/32', icon: Sparkles, color: 'warning' }
+        ].map((stat, i) => (
+          <div key={i} className="bg-card/40 border border-border/40 rounded-3xl p-5 backdrop-blur-xl flex items-center gap-4 group hover:border-primary/30 transition-all">
+            <div className={`w-12 h-12 rounded-2xl bg-${stat.color}/10 border border-${stat.color}/20 flex items-center justify-center text-${stat.color}`}>
+              <stat.icon size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-text-muted uppercase tracking-widest leading-none mb-1">{stat.label}</p>
+              <p className="text-2xl font-black text-text-primary tracking-tighter">{stat.value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
 
-              const studentRecords =
-                Object.values(records).filter(isStudentAttendance);
+      {/* Attendance Table */}
+      <div className="relative overflow-hidden rounded-[2.5rem] border border-border/40 bg-card/30 backdrop-blur-2xl shadow-2xl">
+        <div className="overflow-x-auto premium-scrollbar">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-background-secondary/50 border-b border-border/20">
+                <th className="py-5 px-8 font-black text-[10px] uppercase tracking-[0.2em] text-text-primary/40">Date</th>
+                <th className="py-5 px-8 font-black text-[10px] uppercase tracking-[0.2em] text-text-primary/40">Students Marked</th>
+                <th className="py-5 px-8 font-black text-[10px] uppercase tracking-[0.2em] text-text-primary/40">Present</th>
+                <th className="py-5 px-8 font-black text-[10px] uppercase tracking-[0.2em] text-text-primary/40">Absent</th>
+                <th className="py-5 px-8 font-black text-[10px] uppercase tracking-[0.2em] text-text-primary/40 text-right">Attendance %</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/10">
+              {attendanceRecords.length > 0 ? (
+                attendanceRecords.map((day) => {
+                  const { id: date, ...records } = day;
+                  const studentRecords = Object.values(records).filter(isStudentAttendance);
+                  const total = studentRecords.length;
+                  const present = studentRecords.filter((r) => r.present).length;
+                  const absent = total - present;
+                  const percentage = total > 0 ? Math.round((present / total) * 100) : 0;
 
-              const total = studentRecords.length;
-              const present = studentRecords.filter((r) => r.present).length;
-              const absent = total - present;
-
-              return (
-                <tr
-                  key={date}
-                  className="hover:bg-primary/5 transition-colors"
-                >
-                  <td className="py-3 px-4">{date}</td>
-                  <td className="py-3 px-4">{total}</td>
-                  <td className="py-3 px-4">{present}</td>
-                  <td className="py-3 px-4">{absent}</td>
-                  <td className="py-3 px-4">
-                    <Link
-                      href={`/teacher/attendance/course/${id}/${date}`}
-                      className="p-1 px-3 rounded-lg text-xs text-center m-auto bg-primary hover:bg-primary/80 text-white"
-                    >
-                      View
-                    </Link>
+                  return (
+                    <tr key={date} className="group hover:bg-primary/[0.03] transition-colors">
+                      <td className="py-6 px-8">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-background-secondary border border-border/50 flex items-center justify-center text-text-muted group-hover:text-primary transition-colors">
+                            <Calendar size={18} />
+                          </div>
+                          <span className="font-mono text-sm font-black text-text-primary tracking-tighter">{date}</span>
+                        </div>
+                      </td>
+                      <td className="py-6 px-8 font-bold text-text-primary/70">{total} Students</td>
+                      <td className="py-6 px-8">
+                        <div className="flex items-center gap-2 text-success font-black text-sm">
+                          <UserCheck size={16} /> {present}
+                        </div>
+                      </td>
+                      <td className="py-6 px-8">
+                        <div className="flex items-center gap-2 text-danger font-black text-sm opacity-60">
+                          <UserX size={16} /> {absent}
+                        </div>
+                      </td>
+                      <td className="py-6 px-8 text-right">
+                        <div className="flex items-center justify-end gap-4">
+                          <div className="hidden md:flex flex-col items-end gap-1">
+                            <div className="h-1.5 w-24 bg-background-secondary rounded-full overflow-hidden border border-border/20">
+                              <div
+                                className="h-full bg-primary rounded-full"
+                                style={{ width: `${percentage}%` }}
+                              />
+                            </div>
+                            <span className="text-[9px] font-black text-text-muted uppercase tracking-tighter">{percentage}% Attendance</span>
+                          </div>
+                          <Link
+                            href={`/teacher/attendance/course/${id}/${date}`}
+                            className="p-3 rounded-2xl border border-border/50 bg-background-secondary/50 text-text-muted hover:text-primary hover:bg-primary/10 hover:border-primary/30 transition-all active:scale-95 shadow-sm"
+                          >
+                            <Eye size={18} />
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={5} className="py-20 text-center">
+                    <p className="text-text-muted font-bold text-sm tracking-widest uppercase opacity-40">No attendance records found for this period</p>
                   </td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

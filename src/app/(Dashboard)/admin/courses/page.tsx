@@ -26,13 +26,13 @@ function Courses() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest pl-1">
             <BookOpen size={14} />
-            Academic Management
+            Courses
           </div>
           <h1 className="text-3xl md:text-4xl font-black tracking-tight text-text-primary">
-            Courses Registry
+            All Courses
           </h1>
           <p className="text-text-muted text-sm font-medium opacity-80 pl-1">
-            Total active courses: <span className="text-primary font-bold">{courses.length}</span>
+            Current courses: <span className="text-primary font-bold">{courses.length}</span>
           </p>
         </div>
 
@@ -56,7 +56,7 @@ function Courses() {
           />
         </div>
         <button className="h-14 flex items-center justify-center gap-2 bg-background-secondary/50 border border-border/50 rounded-2xl text-text-muted font-bold text-xs uppercase tracking-widest hover:text-text-primary hover:border-text-primary/30 transition-all">
-          <Filter size={16} /> Advanced Filters
+          <Filter size={16} /> Filters
         </button>
       </div>
 
@@ -66,10 +66,10 @@ function Courses() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-background-secondary/50 border-b border-border/20">
-                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Identity</th>
-                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Core Details</th>
-                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Faculty</th>
-                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Metrics</th>
+                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Code</th>
+                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Course Name</th>
+                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Teacher</th>
+                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Students</th>
                 <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Department</th>
                 <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40 text-right">Actions</th>
               </tr>
@@ -109,7 +109,7 @@ function Courses() {
                         </div>
                         <span className="text-[10px] font-black text-text-primary">{course.students?.length || 0}</span>
                       </div>
-                      <span className="text-[9px] font-bold text-text-muted uppercase tracking-tighter">Enrolled Seats</span>
+                      <span className="text-[9px] font-bold text-text-muted uppercase tracking-tighter">Enrolled Students</span>
                     </div>
                   </td>
                   <td className="py-6 px-6 text-sm">

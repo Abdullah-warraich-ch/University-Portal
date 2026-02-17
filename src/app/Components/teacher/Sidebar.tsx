@@ -61,8 +61,8 @@ const NavLink = ({
       <button
         onClick={onClick}
         className={`w-full group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-300 ${isActive || isOpen
-            ? "text-primary bg-primary/5 shadow-[inset_0_0_20px_rgba(146,95,226,0.02)]"
-            : "text-text-muted hover:text-text-primary hover:bg-white/5"
+          ? "text-primary bg-primary/5 shadow-[inset_0_0_20px_rgba(146,95,226,0.02)]"
+          : "text-text-muted hover:text-text-primary hover:bg-white/5"
           }`}
       >
         {content}
@@ -75,8 +75,8 @@ const NavLink = ({
       href={href || "#"}
       onClick={onClick}
       className={`group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-300 ${isActive
-          ? "text-primary bg-primary/5 shadow-[inset_0_0_20px_rgba(146,95,226,0.02)]"
-          : "text-text-muted hover:text-text-primary hover:bg-white/5"
+        ? "text-primary bg-primary/5 shadow-[inset_0_0_20px_rgba(146,95,226,0.02)]"
+        : "text-text-muted hover:text-text-primary hover:bg-white/5"
         }`}
     >
       {content}
@@ -137,7 +137,7 @@ function Sidebar({ onClose }: SidebarProps) {
               <h2 className="text-text-primary font-black tracking-tighter text-xl leading-none uppercase">
                 VU<span className="text-primary">.</span>PORTAL
               </h2>
-              <p className="text-[10px] text-text-muted font-bold tracking-[0.2em] uppercase mt-1 opacity-60">Faculty Access</p>
+              <p className="text-[10px] text-text-muted font-bold tracking-[0.2em] uppercase mt-1 opacity-60">Teacher Portal</p>
             </div>
           </div>
           {onClose && (
@@ -152,9 +152,9 @@ function Sidebar({ onClose }: SidebarProps) {
       </div>
 
       {/* Navigation Groups */}
-      <div className="flex-1 px-4 space-y-8 overflow-y-auto py-4">
+      <div className="flex-1 px-4 space-y-8 overflow-y-auto py-4 premium-scrollbar">
         <div>
-          <p className="px-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-4 opacity-50">Instructional</p>
+          <p className="px-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-4 opacity-50">Teaching</p>
           <div className="space-y-1.5">
             <NavLink
               href="/teacher"
@@ -168,7 +168,7 @@ function Sidebar({ onClose }: SidebarProps) {
             <div className="space-y-1">
               <NavLink
                 icon={GraduationCap}
-                label="Gradebook"
+                label="Grades"
                 isActive={false}
                 onClick={handleCourseOpen}
                 hasDropdown
@@ -182,8 +182,8 @@ function Sidebar({ onClose }: SidebarProps) {
                       href={`/teacher/courses/${code.id}`}
                       onClick={onClose}
                       className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-all duration-200 ${pathname === `/teacher/courses/${code.id}`
-                          ? "text-primary font-bold bg-primary/5"
-                          : "text-text-muted hover:text-text-primary hover:bg-white/5"
+                        ? "text-primary font-bold bg-primary/5"
+                        : "text-text-muted hover:text-text-primary hover:bg-white/5"
                         }`}
                     >
                       <span className={`w-1.5 h-1.5 rounded-full ${pathname === `/teacher/courses/${code.id}` ? "bg-primary" : "bg-text-muted/30"}`} />
@@ -212,8 +212,8 @@ function Sidebar({ onClose }: SidebarProps) {
                       href={`/teacher/attendance/course/${code.id}`}
                       onClick={onClose}
                       className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-all duration-200 ${pathname === `/teacher/attendance/course/${code.id}`
-                          ? "text-primary font-bold bg-primary/5"
-                          : "text-text-muted hover:text-text-primary hover:bg-white/5"
+                        ? "text-primary font-bold bg-primary/5"
+                        : "text-text-muted hover:text-text-primary hover:bg-white/5"
                         }`}
                     >
                       <span className={`w-1.5 h-1.5 rounded-full ${pathname === `/teacher/attendance/course/${code.id}` ? "bg-primary" : "bg-text-muted/30"}`} />
@@ -250,7 +250,7 @@ function Sidebar({ onClose }: SidebarProps) {
               <h4 className="text-text-primary font-bold text-sm leading-tight">
                 {currentUserRecord?.name || "Teacher"}
               </h4>
-              <p className="text-[10px] text-primary font-black tracking-widest uppercase mt-0.5">Faculty Member</p>
+              <p className="text-[10px] text-primary font-black tracking-widest uppercase mt-0.5">Teacher</p>
             </div>
 
             <button

@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FirebaseContext } from "@/app/Context";
 import { db } from "@/app/Firebase";
 import {
   collection,
@@ -11,259 +10,308 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-
 import { useParams, useRouter } from "next/navigation";
+import { ChevronLeft, GraduationCap, Save, FileText, Layout, Hash, User, AlertCircle, Sparkles, Wand2 } from "lucide-react";
+import Link from "next/link";
+import { Spinner } from "@/app/Components/ui/spinner";
+
+const FormInput = ({ label, icon: Icon, value, onChange, placeholder, type = "text", required = false }: any) => (
+  <div className="space-y-2 group">
+    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted flex items-center gap-2 px-1 group-focus-within:text-primary transition-colors">
+      <Icon size={12} />
+      {label}
+    </label>
+    <div className="relative">
+      <input
+        type={type}
+        required={required}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="w-full bg-background-secondary/30 border border-border/50 rounded-2xl py-3.5 px-5 outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/50 transition-all font-semibold text-sm placeholder:text-text-muted/40"
+      />
+    </div>
+  </div>
+);
+
+const FormSelect = ({ label, icon: Icon, value, onChange, options, placeholder }: any) => (
+  <div className="space-y-2 group">
+    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted flex items-center gap-2 px-1 group-focus-within:text-primary transition-colors">
+      <Icon size={12} />
+      {label}
+    </label>
+    <div className="relative">
+      <select
+        value={value}
+        onChange={onChange}
+        className="w-full appearance-none bg-background-secondary/30 border border-border/50 rounded-2xl py-3.5 px-5 outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/50 transition-all font-semibold text-sm cursor-pointer"
+      >
+        {options.map((opt: any) => (
+          <option key={opt.value} value={opt.value} className="bg-background">
+            {opt.label}
+          </option>
+        ))}
+      </select>
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+        <ChevronLeft className="-rotate-90" size={16} />
+      </div>
+    </div>
+  </div>
+);
 
 function AddGrade() {
-  // Define the type: key is a string (UID), value is a number or string
   interface GradeMap {
     [key: string]: number | string | undefined;
   }
 
   const router = useRouter();
-
   const { id } = useParams();
-  // const [assignments, setAssignments] = React.useState<DocumentData>([]);
-  const [students, setStudents] = React.useState<DocumentData>([]);
+
+  const [students, setStudents] = React.useState<DocumentData[]>([]);
   const [marks, setMarks] = React.useState<GradeMap>({});
   const [totalMarks, setTotalMarks] = useState<number>(10);
   const [type, setType] = useState("quiz1");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [title, setTitle] = useState("");
-
-  console.log(id);
+  const [isLoading, setIsLoading] = useState(false);
 
   const setMarksForStudent = async (e: React.FormEvent) => {
     e.preventDefault();
-    const gradesRef = doc(
-      db,
-      "courses",
-      id as string,
-      "grades",
-      type as string,
-    );
-    const gradeRef = collection(db, "courses", id as string, "grades");
-    const gradeDoc = doc(gradeRef, type);
-    const gradeSnap = await getDoc(gradeDoc);
-    //if type already exists, set error state to "Grade type already exists"
-    if (gradeSnap.exists()) {
-      setError("Grade type already exists");
+    if (!title || !type) {
+      setError("Task type and title are required.");
       return;
     }
-    await setDoc(gradeDoc, {
-      type,
-      title,
-      description,
-      totalMarks,
-    });
-    router.push(`/teacher/courses/${id}`);
+    setIsLoading(true);
+    try {
+      const gradesRef = doc(db, "courses", id as string, "grades", type as string);
+      const gradeDoc = doc(db, "courses", id as string, "grades", type);
+      const gradeSnap = await getDoc(gradeDoc);
 
-    console.log({
-      type,
-      title,
-      description,
-      totalMarks,
-      graded: false,
-    });
-    await updateDoc(gradesRef, {
-      graded: true,
-      marks: marks,
-    });
-    router.push(`/teacher/courses/${id}`);
+      if (gradeSnap.exists()) {
+        setError("Error: This task already exists.");
+        setIsLoading(false);
+        return;
+      }
+
+      await setDoc(gradeDoc, {
+        type,
+        title,
+        description,
+        totalMarks,
+        graded: true,
+        marks: marks,
+        timestamp: new Date()
+      });
+
+      router.push(`/teacher/courses/${id}`);
+    } catch (err) {
+      console.error(err);
+      setError("Error: Could not save grades. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
-
-  //skeleton for Marks input and submission
 
   useEffect(() => {
     const fetchGrades = async () => {
-      const currentCourseStudentsRef = collection(
-        db,
-        "courses",
-        id as string,
-        "students",
-      );
-
+      const currentCourseStudentsRef = collection(db, "courses", id as string, "students");
       const studentsSnap = await getDocs(currentCourseStudentsRef);
       const studentsData = studentsSnap.docs.map((doc) => doc.data());
-      console.log("Enrolled students:", studentsData);
       setStudents(studentsData);
+
+      const initialMarks: GradeMap = {};
+      studentsData.forEach(student => {
+        initialMarks[student.uid] = 0;
+      });
+      setMarks(initialMarks);
     };
-
     fetchGrades();
-  }, [id, title]);
-
-  console.log("Marks state:", marks);
+  }, [id]);
 
   return (
-    <div className="p-8">
-      <div className="p-0">
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary mb-4">
-          Add Task
-        </h1>
-        <form className="space-y-4">
-          <div>
-            <label className="block mb-1 font-medium">Type</label>
-            <select
-              value={type}
-              required
-              defaultValue={"quiz1"}
-              onChange={(e) => setType(e.target.value)}
-              className="w-full border border-border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-primary"
-            >
-              <option
-                value="quiz1"
-                className="text-text-primary px-3 py-2 bg-background"
-              >
-                Quiz 1
-              </option>
-              <option
-                value="quiz2"
-                className="text-text-primary px-3 py-2 bg-background"
-              >
-                Quiz 2
-              </option>
-              <option
-                value="quiz3"
-                className="text-text-primary px-3 py-2 bg-background"
-              >
-                Quiz 3
-              </option>
-              <option
-                value="quiz4"
-                className="text-text-primary px-3 py-2 bg-background"
-              >
-                Quiz 4
-              </option>
-              <option
-                value="midterm"
-                className="text-text-primary px-3 py-2 bg-background"
-              >
-                Midterm
-              </option>
-              <option
-                value="final"
-                className="text-text-primary px-3 py-2 bg-background"
-              >
-                Final
-              </option>
-            </select>
+    <div className="p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-7xl mx-auto">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-2">
+          <Link
+            href={`/teacher/courses/${id}`}
+            className="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors text-xs font-black uppercase tracking-widest mb-2 group"
+          >
+            <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+            Back to Course
+          </Link>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-lg shadow-primary/5">
+              <GraduationCap size={24} />
+            </div>
+            <div>
+              <h1 className="text-3xl font-black tracking-tight text-text-primary uppercase leading-tight">
+                Add Grades <span className="text-primary">.</span>
+              </h1>
+              <p className="text-text-muted text-sm font-bold uppercase tracking-widest flex items-center gap-2 mt-1 opacity-70">
+                <FileText size={14} className="text-primary" /> Student Marks
+              </p>
+            </div>
           </div>
-          <div>
-            <label className="block mb-1 font-medium">Title</label>
-            <input
-              value={title}
-              required
-              onChange={(e) => setTitle(e.target.value)}
-              type="text"
-              className="w-full border border-border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Description</label>
-            <textarea
-              value={description}
-              required
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full border border-border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-primary"
-              rows={4}
-            ></textarea>
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Total Marks</label>
-            <input
-              value={totalMarks}
-              required
-              onChange={(e) => {
-                const value = Number(e.target.value);
-                if (value < 0) {
-                  setTotalMarks(0);
-                } else if (value > 100) {
-                  setTotalMarks(100);
-                } else {
-                  setTotalMarks(value);
-                }
-              }}
-              type="number"
-              className="w-full border border-border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-          <p className="text-red-500">{error}</p>
-        </form>
-      </div>
-      <div className="border border-border/40 rounded-2xl bg-background-secondary/20 p-4">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-background-secondary/40 text-left text-text-muted">
-              <th className="py-3 px-4 font-semibold">Student Name</th>
-              <th className="py-3 px-4 font-semibold">Grade</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border/30">
-            {students?.map((student: DocumentData) => (
-              <tr
-                key={student.uid}
-                className="hover:bg-primary/5 transition-colors"
-              >
-                <td className="py-3 px-4">{student.name}</td>
-                <td className="py-3 px-4">
-                  <input
-                    type="number"
-                    value={marks[student.uid] || ""}
-                    onChange={(e) => {
-                      if (e.target.value === "") {
-                        setMarks({
-                          ...marks,
-                          [student.uid]: totalMarks, // or you can choose to set it to a default value
-                        });
-                      } else if (Number(e.target.value) > totalMarks) {
-                        setMarks({
-                          ...marks,
-                          [student.uid]: totalMarks,
-                        });
-                      } else if (Number(e.target.value) < 0) {
-                        setMarks({
-                          ...marks,
-                          [student.uid]: 0,
-                        });
-                      } else {
-                        setMarks({
-                          ...marks,
-                          [student.uid]: e.target.value,
-                        });
-                      }
-                    }}
-                    required
-                    className="outline-1 bg-secondary/20 outline-primary rounded w-12 mr-2 px-2 py-1 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  />
-                  /
-                  <input
-                    type="number"
-                    value={totalMarks}
-                    onChange={(e) => {
-                      if (e.target.value === "") {
-                        setTotalMarks(10); // or you can choose to set it to a default value
-                      } else if (Number(e.target.value) > 100) {
-                        setTotalMarks(100);
-                      } else {
-                        setTotalMarks(Number(e.target.value));
-                      }
-                    }}
-                    className="outline-1 ml-2 pl-1 bg-secondary/20 outline-primary rounded w-12 mr-2 px-2 py-1 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="mt-4 flex w-full justify-center items-center">
+        </div>
+
         <button
           onClick={setMarksForStudent}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
+          disabled={isLoading}
+          className="group flex items-center justify-center gap-3 bg-primary text-white px-10 py-4 rounded-2xl font-black text-sm transition-all shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 active:scale-95 disabled:opacity-50"
         >
-          Save Grades
+          {isLoading ? <Spinner className="w-5 h-5 border-white" /> : <Save size={18} />}
+          {isLoading ? "Saving Grades..." : "Save Grades"}
         </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left">
+        {/* Module Configuration */}
+        <div className="lg:col-span-2 space-y-8">
+          <div className="bg-card/40 backdrop-blur-xl border border-border/40 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+              <Wand2 size={140} />
+            </div>
+
+            <div className="space-y-8 relative z-10">
+              <div className="space-y-6">
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Task Details</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormSelect
+                    label="Task Type"
+                    icon={Layout}
+                    value={type}
+                    onChange={(e: any) => setType(e.target.value)}
+                    options={[
+                      { value: "quiz1", label: "Quiz 1" },
+                      { value: "quiz2", label: "Quiz 2" },
+                      { value: "quiz3", label: "Quiz 3" },
+                      { value: "quiz4", label: "Quiz 4" },
+                      { value: "midterm", label: "Midterm Exam" },
+                      { value: "final", label: "Final Exam" }
+                    ]}
+                  />
+                  <FormInput
+                    label="Title"
+                    icon={FileText}
+                    value={title}
+                    onChange={(e: any) => setTitle(e.target.value)}
+                    placeholder="e.g. Data Structures Mid-Term"
+                  />
+                </div>
+                <div className="space-y-2 group">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted flex items-center gap-2 px-1 group-focus-within:text-primary transition-colors">
+                    <Layout size={12} />
+                    Description
+                  </label>
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Short note about this task..."
+                    className="w-full bg-background-secondary/30 border border-border/50 rounded-2xl py-3.5 px-5 outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/50 transition-all font-semibold text-sm h-32 resize-none placeholder:text-text-muted/20"
+                  />
+                </div>
+                <FormInput
+                  label="Total Marks"
+                  icon={Hash}
+                  type="number"
+                  value={totalMarks}
+                  onChange={(e: any) => setTotalMarks(Number(e.target.value))}
+                  placeholder="100"
+                />
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center justify-between border-b border-primary/10 pb-2">
+                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Student Marks</p>
+                  <span className="text-[9px] font-black text-text-muted opacity-50 uppercase tracking-widest">{students.length} Students</span>
+                </div>
+
+                <div className="relative overflow-hidden rounded-3xl border border-border/40 bg-background/30">
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="bg-background-secondary/50 border-b border-border/20 text-[9px] font-black uppercase tracking-widest text-text-muted/60">
+                        <th className="py-4 px-6 italic">Name</th>
+                        <th className="py-4 px-6 text-right italic">Marks</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/10">
+                      {students.map((student) => (
+                        <tr key={student.uid} className="group hover:bg-primary/[0.03] transition-colors">
+                          <td className="py-4 px-6">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-background-secondary border border-border/50 flex items-center justify-center text-text-muted group-hover:text-primary group-hover:bg-primary/5 transition-all">
+                                <User size={14} />
+                              </div>
+                              <span className="text-sm font-bold text-text-primary group-hover:translate-x-1 transition-transform">{student.name}</span>
+                            </div>
+                          </td>
+                          <td className="py-4 px-6 text-right">
+                            <div className="flex items-center justify-end gap-3 text-sm font-black">
+                              <input
+                                type="number"
+                                value={marks[student.uid] || 0}
+                                onChange={(e) => {
+                                  const val = Math.min(totalMarks, Math.max(0, Number(e.target.value)));
+                                  setMarks({ ...marks, [student.uid]: val });
+                                }}
+                                className="w-16 bg-primary/5 border border-primary/20 rounded-xl px-3 py-2 text-center text-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              />
+                              <span className="text-text-muted opacity-30">/</span>
+                              <span className="text-text-muted opacity-50">{totalMarks}</span>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar Insights */}
+        <div className="space-y-6">
+          <div className="bg-primary border border-primary shadow-xl shadow-primary/20 rounded-[2rem] p-7 text-white relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl" />
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-4 flex items-center gap-2">
+              <Sparkles size={14} /> Quick Note
+            </h3>
+            <p className="text-sm font-bold leading-relaxed opacity-90">
+              Students will see these grades instantly. Please double-check before saving.
+            </p>
+          </div>
+
+          <div className="bg-card/40 border border-border/20 rounded-[2rem] p-6 space-y-4">
+            <h3 className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2">
+              <AlertCircle size={14} className="text-warning" /> Help
+            </h3>
+            <div className="space-y-3">
+              {[
+                "Marks cannot exceed the total",
+                "Verify student names",
+                "Total marks are required",
+                "Class average updates automatically"
+              ].map((note, i) => (
+                <div key={i} className="flex items-center gap-3 text-xs font-bold text-text-primary/70">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary/30" />
+                  {note}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {error && (
+            <div className="bg-danger/5 border border-danger/20 rounded-[2rem] p-6 flex items-start gap-4 animate-in fade-in slide-in-from-top-2">
+              <div className="w-8 h-8 rounded-xl bg-danger/10 flex items-center justify-center text-danger shrink-0">
+                <AlertCircle size={18} />
+              </div>
+              <p className="text-[10px] font-black text-danger uppercase tracking-widest leading-relaxed mt-1">{error}</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

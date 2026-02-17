@@ -7,7 +7,7 @@ import Kpicard from "@/app/Components/student/Kpi-card";
 import Heading from "@/app/Components/universal/Heading";
 import AverageAttendance from "@/app/Components/student/divs/AverageAttendance";
 import UpcomingAssignments from "@/app/Components/student/divs/UpcommingAssignments";
-import { BookOpen, Sparkles } from "lucide-react";
+import { BookOpen, Sparkles, LayoutDashboard, GraduationCap, Target, Clock, ArrowRight } from "lucide-react";
 
 function Student() {
   const { currentUserRecord, enrolledCourses, availableCourses } = useContext(
@@ -52,60 +52,67 @@ function Student() {
   return (
     <div className="p-4 md:p-8 space-y-10 max-w-7xl mx-auto">
       {/* Welcome Section */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/20 via-primary/5 to-transparent p-6 md:p-10 border border-primary/10">
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 text-primary mb-2">
-            <Sparkles size={18} className="animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-widest">Student Portal</span>
+      <section className="relative overflow-hidden rounded-[2.5rem] bg-card/40 backdrop-blur-xl p-8 md:p-12 border border-border/40 shadow-2xl">
+        <div className="relative z-10 space-y-4">
+          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.4em]">
+            <LayoutDashboard size={14} className="animate-pulse" />
+            Student Portal
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-text-primary tracking-tight">
-            Welcome back, <span className="text-primary">{currentUserRecord?.name?.split(' ')[0] || "Student"}!</span>
+          <h1 className="text-4xl md:text-5xl font-black text-text-primary tracking-tight leading-none">
+            Hello, <span className="text-primary">{currentUserRecord?.name?.split(' ')[0] || "Student"}!</span>
           </h1>
-          <p className="text-text-muted mt-2 max-w-md">
-            Check your latest grades, upcoming assignments, and keep track of your attendance.
+          <p className="text-text-muted text-sm font-medium max-w-sm opacity-60 leading-relaxed">
+            Overview of your active courses, upcoming tasks, and academic progress.
           </p>
         </div>
-        <div className="absolute top-0 right-0 -m-10 h-64 w-64 bg-primary/10 rounded-full blur-3xl opacity-50" />
+
+        {/* Decorative element */}
+        <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+          <GraduationCap size={200} />
+        </div>
+        <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px]" />
       </section>
 
       {availableCourses.length > 0 && (
         <section className="space-y-6">
-          <div className="flex items-end justify-between border-b border-border/40 pb-4">
-            <div>
-              <Heading>Available Courses</Heading>
-              <p className="text-sm text-text-muted mt-1">Explore new subjects and expand your knowledge</p>
+          <div className="flex items-center justify-between border-b border-border/10 pb-4">
+            <div className="flex items-center gap-2">
+              <Sparkles size={16} className="text-primary" />
+              <h2 className="text-lg font-black tracking-tight text-text-primary uppercase">Discover</h2>
             </div>
+            <p className="hidden sm:block text-[10px] text-text-muted font-black tracking-[0.2em] uppercase opacity-40">Expand your knowledge.</p>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {availableCourses.map((course) => (
               <div
                 key={String(course.code)}
-                className="group relative flex flex-col justify-between rounded-2xl border border-border/40 bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/30"
+                className="group relative flex flex-col justify-between rounded-[2rem] border border-border/40 bg-card/30 backdrop-blur-xl p-8 shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:border-primary/40"
               >
                 <div>
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="p-2 rounded-lg bg-primary/10 text-primary">
-                      <BookOpen size={20} />
+                  <div className="flex items-start justify-between gap-3 mb-6">
+                    <div className="p-4 rounded-2xl border border-primary/20 bg-primary/10 text-primary group-hover:scale-110 transition-all duration-500 shadow-lg shadow-primary/5">
+                      <BookOpen size={22} />
                     </div>
-                    <span className="text-[10px] font-bold px-2 py-1 rounded-md bg-background-secondary border border-border/40 text-text-muted uppercase tracking-tighter">
+                    <span className="text-[10px] font-black px-3 py-1 rounded-lg bg-background-secondary/50 border border-border/40 text-text-muted/60 uppercase tracking-widest group-hover:border-primary/40 group-hover:text-primary transition-colors">
                       {String(course.code)}
                     </span>
                   </div>
-                  <h3 className="text-text-primary font-bold text-lg leading-snug group-hover:text-primary transition-colors">
+                  <h3 className="text-text-primary font-black text-xl leading-snug group-hover:text-primary transition-colors tracking-tight">
                     {String(course.title)}
                   </h3>
-                  <p className="text-text-muted text-sm mt-1">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-text-muted/40 mt-1">
                     Prof. {String(course.teacher)}
                   </p>
                 </div>
-                <div className="mt-6">
+                <div className="mt-8">
                   <button
                     onClick={() => RegisterCourse(String(course.code))}
-                    className="w-full inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-12 inline-flex items-center justify-center rounded-xl bg-primary text-[10px] font-black uppercase tracking-widest text-white shadow-xl shadow-primary/20 transition-all hover:shadow-primary/40 active:scale-95"
                   >
-                    Register Now
+                    Join Course
                   </button>
                 </div>
+                <div className="absolute -top-6 -right-6 h-24 w-24 bg-primary/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             ))}
           </div>
@@ -114,11 +121,12 @@ function Student() {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
         <section className="xl:col-span-2 space-y-6">
-          <div className="flex items-end justify-between border-b border-border/40 pb-4">
-            <div>
-              <Heading>Enrolled Courses</Heading>
-              <p className="text-sm text-text-muted mt-1">Your active academic path</p>
+          <div className="flex items-center justify-between border-b border-border/10 pb-4">
+            <div className="flex items-center gap-2">
+              <GraduationCap size={16} className="text-primary" />
+              <h2 className="text-lg font-black tracking-tight text-text-primary uppercase">My Courses</h2>
             </div>
+            <p className="hidden sm:block text-[10px] text-text-muted font-black tracking-[0.2em] uppercase opacity-40">Current studies.</p>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             {enrolledCourses.length > 0 ? (
@@ -140,10 +148,10 @@ function Student() {
         </section>
 
         <section className="space-y-6">
-          <div className="flex items-end justify-between border-b border-border/40 pb-4">
-            <div>
-              <Heading>Deadlines</Heading>
-              <p className="text-sm text-text-muted mt-1">Upcoming tasks</p>
+          <div className="flex items-center justify-between border-b border-border/10 pb-4">
+            <div className="flex items-center gap-2">
+              <Clock size={16} className="text-primary" />
+              <h2 className="text-lg font-black tracking-tight text-text-primary uppercase">To-Do</h2>
             </div>
           </div>
           <div className="bg-card rounded-2xl border border-border/40 p-1 shadow-sm overflow-hidden">
@@ -153,11 +161,12 @@ function Student() {
       </div>
 
       <section className="space-y-6">
-        <div className="flex items-end justify-between border-b border-border/40 pb-4">
-          <div>
-            <Heading>Attendance Insights</Heading>
-            <p className="text-sm text-text-muted mt-1">Track your presence across all courses</p>
+        <div className="flex items-center justify-between border-b border-border/10 pb-4">
+          <div className="flex items-center gap-2">
+            <Target size={16} className="text-primary" />
+            <h2 className="text-lg font-black tracking-tight text-text-primary uppercase">Attendance</h2>
           </div>
+          <p className="hidden sm:block text-[10px] text-text-muted font-black tracking-[0.2em] uppercase opacity-40">Weekly Summary.</p>
         </div>
         <div className="bg-card rounded-3xl border border-border/40 p-2 md:p-6 lg:p-10 shadow-sm overflow-x-auto">
           <AverageAttendance />

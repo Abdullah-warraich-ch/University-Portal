@@ -4,7 +4,7 @@ import Kpicard from "@/app/Components/admin/Kpi-card";
 import { FirebaseContext } from "@/app/Context";
 import Heading from "@/app/Components/universal/Heading";
 import Link from "next/link";
-import { Users, GraduationCap, BookOpen, Building2, Plus, ArrowRight } from "lucide-react";
+import { Users, GraduationCap, BookOpen, Building2, Plus, ArrowRight, LayoutDashboard, Sparkles, Files, Briefcase } from "lucide-react";
 
 function Admin() {
   const { students, teachers, courses } = React.useContext(FirebaseContext)!;
@@ -25,55 +25,64 @@ function Admin() {
     <div className="p-4 md:p-8 space-y-10 max-w-7xl mx-auto">
       {/* Header Section */}
       <section className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-6">
-        <div>
-          <Heading>Admin Dashboard</Heading>
-          <p className="text-sm text-text-muted mt-2">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest pl-1">
+            <LayoutDashboard size={14} />
+            Overview
+          </div>
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-text-primary">
+            Admin Dashboard <span className="text-primary">.</span>
+          </h1>
+          <p className="text-text-muted text-sm font-medium opacity-60">
             System overview and quick management access.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 bg-card/40 border border-border/40 px-4 py-2 rounded-2xl backdrop-blur-xl">
           <div className="flex -space-x-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-primary/10 flex items-center justify-center">
-                <Users size={12} className="text-primary" />
+              <div key={i} className="h-6 w-6 rounded-full border-2 border-background bg-primary/20 flex items-center justify-center">
+                <Users size={10} className="text-primary" />
               </div>
             ))}
           </div>
-          <span className="text-xs font-bold text-text-muted ml-2">Active now</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-text-muted leading-none">
+            <span className="text-success inline-block w-1.5 h-1.5 rounded-full bg-success animate-pulse mr-1" />
+            Live
+          </span>
         </div>
       </section>
 
       {/* KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Kpicard
-          title="Total Students"
+          title="Students"
           value={students.length}
           to="/admin/students"
-          icon={<PiStudent size={24} />}
+          icon={<GraduationCap size={24} />}
           color="primary"
-          trend="+12% this month"
+          trend="+12% growth"
         />
         <Kpicard
-          title="Total Teachers"
+          title="Teachers"
           value={teachers.length}
           to="/admin/teachers"
-          icon={<GiTeacher size={24} />}
+          icon={<Briefcase size={24} />}
           color="success"
           trend="Stable"
         />
         <Kpicard
-          title="Total Courses"
+          title="Courses"
           value={courses.length}
           to="/admin/courses"
-          icon={<Book size={24} />}
+          icon={<BookOpen size={24} />}
           color="warning"
           trend="+5 new"
         />
         <Kpicard
           title="Departments"
           value={departments.size}
-          to="/admin/departments"
-          icon={<RiBuilding2Fill size={24} />}
+          to="/admin/courses"
+          icon={<Building2 size={24} />}
           color="danger"
           trend="All active"
         />
@@ -81,9 +90,9 @@ function Admin() {
 
       {/* Quick Actions */}
       <section className="space-y-6">
-        <div className="flex items-center gap-2 border-b border-border/40 pb-4">
-          <Plus size={20} className="text-primary" />
-          <h2 className="text-xl font-black tracking-tight text-text-primary uppercase">Management Shortcuts</h2>
+        <div className="flex items-center gap-2">
+          <Sparkles size={16} className="text-primary" />
+          <h2 className="text-lg font-black tracking-tight text-text-primary uppercase">Shortcuts</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link
@@ -96,7 +105,7 @@ function Admin() {
               </div>
               <h3 className="text-lg font-bold text-text-primary">Add Student</h3>
               <p className="text-sm text-text-muted mt-1 leading-relaxed">
-                Register a new student profile and assign credentials.
+                Register a new student and create their profile.
               </p>
               <div className="mt-4 flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
                 Proceed <ArrowRight size={14} />
@@ -115,7 +124,7 @@ function Admin() {
               </div>
               <h3 className="text-lg font-bold text-text-primary">Add Teacher</h3>
               <p className="text-sm text-text-muted mt-1 leading-relaxed">
-                Onboard new faculty members and set department roles.
+                Add a new teacher and assign them to a department.
               </p>
               <div className="mt-4 flex items-center gap-2 text-success font-bold text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
                 Proceed <ArrowRight size={14} />
@@ -134,7 +143,7 @@ function Admin() {
               </div>
               <h3 className="text-lg font-bold text-text-primary">Add Course</h3>
               <p className="text-sm text-text-muted mt-1 leading-relaxed">
-                Define new curriculum modules and assign instructors.
+                Create a new course and assign a teacher.
               </p>
               <div className="mt-4 flex items-center gap-2 text-warning font-bold text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
                 Proceed <ArrowRight size={14} />
@@ -147,16 +156,16 @@ function Admin() {
 
       {/* Recent Activity / Courses */}
       <section className="space-y-6">
-        <div className="flex items-center justify-between border-b border-border/40 pb-4">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Building2 size={20} className="text-primary" />
-            <h2 className="text-xl font-black tracking-tight text-text-primary uppercase">Recent Course Registry</h2>
+            <Files size={16} className="text-primary" />
+            <h2 className="text-lg font-black tracking-tight text-text-primary uppercase">Recent Courses</h2>
           </div>
           <Link
             href="/admin/courses"
-            className="text-xs font-bold text-primary hover:underline uppercase tracking-widest"
+            className="text-[10px] font-black text-primary hover:text-primary/70 transition-colors uppercase tracking-widest border border-primary/20 bg-primary/5 px-4 py-2 rounded-xl active:scale-95"
           >
-            Explore all
+            See All
           </Link>
         </div>
 
@@ -200,11 +209,5 @@ function Admin() {
     </div>
   );
 }
-
-// Fixed imports for the specific icons used in KPI cards
-import { PiStudent } from "react-icons/pi";
-import { GiTeacher } from "react-icons/gi";
-import { Book } from "lucide-react";
-import { RiBuilding2Fill } from "react-icons/ri";
 
 export default Admin;

@@ -26,13 +26,13 @@ function Students() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest pl-1">
             <Users size={14} />
-            Student Body Management
+            Students
           </div>
           <h1 className="text-3xl md:text-4xl font-black tracking-tight text-text-primary">
-            Student Directory
+            All Students
           </h1>
           <p className="text-text-muted text-sm font-medium opacity-80 pl-1">
-            Total registered scholars: <span className="text-primary font-bold">{students.length}</span>
+            Total students: <span className="text-primary font-bold">{students.length}</span>
           </p>
         </div>
 
@@ -41,7 +41,7 @@ function Students() {
           className="group flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-2xl font-black text-sm transition-all hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-0.5 active:scale-95"
         >
           <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
-          Register Student
+          Add New Student
         </Link>
       </div>
 
@@ -51,12 +51,12 @@ function Students() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
           <input
             type="text"
-            placeholder="Search by name, ID, or email address..."
+            placeholder="Search by name, ID, or email..."
             className="w-full h-14 pl-12 pr-4 bg-background-secondary/30 border border-border/50 rounded-2xl outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/50 transition-all font-semibold text-sm"
           />
         </div>
         <button className="h-14 flex items-center justify-center gap-2 bg-background-secondary/50 border border-border/50 rounded-2xl text-text-muted font-bold text-xs uppercase tracking-widest hover:text-text-primary hover:border-text-primary/30 transition-all">
-          <Filter size={16} /> Filter Segment
+          <Filter size={16} /> Filters
         </button>
       </div>
 
@@ -66,10 +66,10 @@ function Students() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-background-secondary/50 border-b border-border/20">
-                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Student Detail</th>
-                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Identification</th>
-                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Placement</th>
-                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Contact Info</th>
+                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Name</th>
+                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Student ID</th>
+                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Department</th>
+                <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40">Email & Phone</th>
                 <th className="py-5 px-6 font-black text-[10px] uppercase tracking-widest text-text-primary/40 text-right">Actions</th>
               </tr>
             </thead>
@@ -86,7 +86,7 @@ function Students() {
                       </div>
                       <div className="flex flex-col">
                         <span className="font-bold text-text-primary leading-tight group-hover:text-primary transition-colors">{student.name}</span>
-                        <span className="text-[10px] font-black text-text-muted uppercase tracking-tighter mt-0.5 group-hover:text-text-muted/60">Active Scholar</span>
+                        <span className="text-[10px] font-black text-text-muted uppercase tracking-tighter mt-0.5 group-hover:text-text-muted/60">Student</span>
                       </div>
                     </div>
                   </td>
@@ -116,7 +116,7 @@ function Students() {
                       </div>
                       <div className="flex items-center gap-2 text-[10px] font-bold text-text-muted/60">
                         <Phone size={11} className="text-primary/30" />
-                        {student.phone || "No contact"}
+                        {student.phone || "Not set"}
                       </div>
                     </div>
                   </td>
@@ -125,14 +125,14 @@ function Students() {
                       <Link
                         href={`/admin/students/edit/${student.uid}`}
                         className="p-2.5 rounded-xl border border-border/50 bg-background-secondary/30 text-text-muted hover:text-primary hover:bg-primary/5 hover:border-primary/20 transition-all active:scale-90"
-                        title="Modify Profile"
+                        title="Edit Student"
                       >
                         <Edit2 size={14} />
                       </Link>
                       <button
                         onClick={() => student.uid && deleteRecord(student.uid)}
                         className="p-2.5 rounded-xl border border-border/50 bg-background-secondary/30 text-text-muted hover:text-danger hover:bg-danger/5 hover:border-danger/20 transition-all active:scale-90"
-                        title="Delete Scholar"
+                        title="Delete Student"
                       >
                         <Trash2 size={14} />
                       </button>

@@ -106,8 +106,8 @@ function CreateCourse() {
             <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-lg shadow-primary/5">
               <Plus size={24} />
             </div>
-            <h1 className="text-3xl font-black tracking-tight text-text-primary">
-              New Course Registry <span className="text-primary">.</span>
+            <h1 className="text-3xl font-black tracking-tight text-text-primary uppercase leading-tight">
+              Add New Course <span className="text-primary">.</span>
             </h1>
           </div>
         </div>
@@ -120,14 +120,14 @@ function CreateCourse() {
             <form onSubmit={handleCreate} className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormInput
-                  label="Course Identity Code"
+                  label="Course Code"
                   icon={Layers}
                   value={courseCode}
                   onChange={(e: any) => setCourseCode(e.target.value)}
                   placeholder="e.g. CS-101"
                 />
                 <FormInput
-                  label="Course Module Title"
+                  label="Course Name"
                   icon={Book}
                   value={courseName}
                   onChange={(e: any) => setCourseName(e.target.value)}
@@ -135,7 +135,7 @@ function CreateCourse() {
                 />
 
                 <FormSelect
-                  label="Assign Faculty"
+                  label="Select Teacher"
                   icon={User}
                   value={teacherUid}
                   onChange={(e: any) => {
@@ -145,11 +145,11 @@ function CreateCourse() {
                     setCourseTeacher(teacher?.name || "");
                   }}
                   options={teachers.map((t: any) => ({ value: t.uid, label: t.name }))}
-                  placeholder="Select Professor"
+                  placeholder="Select Teacher"
                 />
 
                 <FormSelect
-                  label="Academic Department"
+                  label="Department"
                   icon={Building}
                   value={courseDepartment}
                   onChange={(e: any) => setCourseDepartment(e.target.value)}
@@ -162,7 +162,7 @@ function CreateCourse() {
                 />
 
                 <FormSelect
-                  label="Semester Assigned"
+                  label="Semester"
                   icon={Sparkles}
                   value={courseSemester}
                   onChange={(e: any) => setCourseSemester(e.target.value)}
@@ -176,7 +176,7 @@ function CreateCourse() {
                     { value: "7th", label: "7th Semester" },
                     { value: "8th", label: "8th Semester" }
                   ]}
-                  placeholder="Target Semester"
+                  placeholder="Select Semester"
                 />
               </div>
 
@@ -187,7 +187,7 @@ function CreateCourse() {
                   className="flex-1 md:flex-none flex items-center justify-center gap-3 bg-primary text-white px-10 py-4 rounded-2xl font-black text-sm transition-all shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? <Spinner className="w-5 h-5 border-white" /> : <Plus size={18} />}
-                  {loading ? "Initializing..." : "Register Course"}
+                  {loading ? "Creating..." : "Add Course"}
                 </button>
                 <button
                   type="button"
@@ -205,10 +205,10 @@ function CreateCourse() {
         <div className="space-y-6">
           <div className="bg-primary/5 border border-primary/20 rounded-[2rem] p-6 space-y-4">
             <h3 className="text-primary font-black text-xs uppercase tracking-widest flex items-center gap-2">
-              <Sparkles size={14} /> Creation Guide
+              <Sparkles size={14} /> Quick Note
             </h3>
             <p className="text-text-primary/70 text-sm leading-relaxed font-medium">
-              Ensure the Course Code is unique and follows the university format. This code will be used as the primary identifier.
+              Ensure the course code is unique and matches the university format. This code is the main identifier for the course.
             </p>
             <div className="pt-2">
               <div className="flex items-center gap-3 text-[10px] font-black text-text-muted uppercase tracking-tighter">
@@ -219,19 +219,19 @@ function CreateCourse() {
 
           <div className="bg-card/40 border border-border/20 rounded-[2rem] p-6 overflow-hidden relative group">
             <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
-            <h3 className="text-text-muted font-black text-[10px] uppercase tracking-widest mb-4">Module Summary</h3>
+            <h3 className="text-text-muted font-black text-[10px] uppercase tracking-widest mb-4">Course Preview</h3>
             <div className="space-y-3">
               <div className="flex flex-col">
-                <span className="text-[10px] font-bold text-text-muted uppercase">Identity</span>
+                <span className="text-[10px] font-bold text-text-muted uppercase">Code</span>
                 <span className="text-sm font-black text-text-primary">{courseCode || "Not set"}</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] font-bold text-text-muted uppercase">Title</span>
+                <span className="text-[10px] font-bold text-text-muted uppercase">Name</span>
                 <span className="text-sm font-black text-text-primary">{courseName || "Untitled"}</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-[10px] font-bold text-text-muted uppercase">Department</span>
-                <span className="text-sm font-black text-text-primary">{courseDepartment || "Pending..."}</span>
+                <span className="text-sm font-black text-text-primary">{courseDepartment || "Not selected"}</span>
               </div>
             </div>
           </div>

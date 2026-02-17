@@ -32,8 +32,8 @@ const NavLink = ({
     href={href}
     onClick={onClick}
     className={`group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-300 ${isActive
-        ? "text-primary bg-primary/10 shadow-[inset_0_0_20px_rgba(146,95,226,0.05)]"
-        : "text-text-muted hover:text-text-primary hover:bg-white/5"
+      ? "text-primary bg-primary/10 shadow-[inset_0_0_20px_rgba(146,95,226,0.05)]"
+      : "text-text-muted hover:text-text-primary hover:bg-white/5"
       }`}
   >
     {/* Active Indicator Bar */}
@@ -91,7 +91,7 @@ function Sidebar({ onClose }: SidebarProps) {
               <h2 className="text-text-primary font-black tracking-tighter text-xl leading-none">
                 VU<span className="text-primary">.</span>PORTAL
               </h2>
-              <p className="text-[10px] text-text-muted font-bold tracking-[0.2em] uppercase mt-1 opacity-60">Admin Central</p>
+              <p className="text-[10px] text-text-muted font-bold tracking-[0.2em] uppercase mt-1 opacity-60">Admin Portal</p>
             </div>
           </div>
           {onClose && (
@@ -106,9 +106,9 @@ function Sidebar({ onClose }: SidebarProps) {
       </div>
 
       {/* Navigation Groups */}
-      <div className="flex-1 px-4 space-y-8 overflow-y-auto py-4">
+      <div className="flex-1 px-4 space-y-8 overflow-y-auto py-4 premium-scrollbar">
         <div>
-          <p className="px-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-4 opacity-50">Main Menu</p>
+          <p className="px-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-4 opacity-50">Menu</p>
           <div className="space-y-1.5">
             <NavLink
               href="/admin"
@@ -180,7 +180,7 @@ function Sidebar({ onClose }: SidebarProps) {
               <LogOut size={14} className="group-hover/btn:-translate-x-1 transition-transform" />
               Sign Out
             </button>
-            <p className="text-[10px] text-text-muted mt-1 opacity-60">Session: 2h 45m active</p>
+            <p className="text-[10px] text-text-muted mt-1 opacity-60">Logged in as Admin</p>
           </div>
         </div>
       </div>

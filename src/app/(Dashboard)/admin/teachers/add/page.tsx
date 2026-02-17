@@ -66,7 +66,7 @@ function TeacherDetail() {
   async function CreateTeacherCredentials(e: React.FormEvent) {
     e.preventDefault();
     if (!teacherEmail || !teacherPassword || !teacherName || !teacherId) {
-      alert("Institutional credentials and name are mandatory.");
+      alert("Email, password, and name are required.");
       return;
     }
     setLoading(true);
@@ -108,14 +108,14 @@ function TeacherDetail() {
             className="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors text-xs font-black uppercase tracking-widest mb-4 group"
           >
             <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            Faculty Staffing
+            Teacher List
           </Link>
           <div className="flex items-center gap-3 text-left">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-lg shadow-primary/5 transition-transform hover:rotate-6">
               <UserPlus size={24} />
             </div>
             <h1 className="text-3xl font-black tracking-tight text-text-primary">
-              Professor Onboarding <span className="text-primary">.</span>
+              Add New Teacher <span className="text-primary">.</span>
             </h1>
           </div>
         </div>
@@ -131,59 +131,59 @@ function TeacherDetail() {
 
             <form onSubmit={CreateTeacherCredentials} className="space-y-8 relative z-10">
               <div className="space-y-6">
-                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Institutional Access</p>
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Account Details</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormInput
-                    label="Faculty Email (Admin)"
+                    label="Email Address"
                     icon={Mail}
                     value={teacherEmail}
                     onChange={(e: any) => setTeacherEmail(e.target.value)}
-                    placeholder="professor@university.edu"
+                    placeholder="teacher@university.edu"
                     type="email"
                   />
                   <FormInput
-                    label="System Passkey"
+                    label="Password"
                     icon={Lock}
                     value={teacherPassword}
                     onChange={(e: any) => setTeacherPassword(e.target.value)}
-                    placeholder="Assign temporary key"
+                    placeholder="Enter password"
                     type="password"
                   />
                 </div>
               </div>
 
               <div className="space-y-6">
-                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Professional Identity</p>
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Personal Info</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormInput
-                    label="Full Professional Name"
+                    label="Full Name"
                     icon={User}
                     value={teacherName}
                     onChange={(e: any) => setTeacherName(e.target.value)}
-                    placeholder="Dr. Julian Moore"
+                    placeholder="e.g. Abdullah Khan"
                   />
                   <FormInput
-                    label="Employee ID"
+                    label="Teacher ID"
                     icon={Hash}
                     value={teacherId}
                     onChange={(e: any) => setTeacherId(e.target.value)}
-                    placeholder="PROF-2026-X8"
+                    placeholder="T-12345"
                   />
                   <FormInput
-                    label="Direct Line"
+                    label="Phone Number"
                     icon={Phone}
                     value={teacherPhone}
                     onChange={(e: any) => setTeacherPhone(e.target.value)}
-                    placeholder="+92 3XX XXXXXXX"
+                    placeholder="+91 XXXXXXXXXX"
                   />
                 </div>
               </div>
 
               <div className="space-y-6">
-                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Academic Appointment</p>
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Work Info</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormSelect
-                    label="Primary Department"
+                    label="Department"
                     icon={Building}
                     value={teacherDepartment}
                     onChange={(e: any) => setTeacherDepartment(e.target.value)}
@@ -192,10 +192,10 @@ function TeacherDetail() {
                       { value: "Mathematics", label: "Mathematics" },
                       { value: "Physics", label: "Physics" }
                     ]}
-                    placeholder="Select Allocation"
+                    placeholder="Select Department"
                   />
                   <FormSelect
-                    label="Faculty Rank"
+                    label="Position"
                     icon={Briefcase}
                     value={teacherPost}
                     onChange={(e: any) => setTeacherPost(e.target.value)}
@@ -219,7 +219,7 @@ function TeacherDetail() {
                   className="w-full md:w-auto flex items-center justify-center gap-3 bg-primary text-white px-12 py-4 rounded-2xl font-black text-sm transition-all shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 active:scale-95 disabled:opacity-50"
                 >
                   {loading ? <Spinner className="w-5 h-5 border-white" /> : <ShieldAlert size={18} />}
-                  {loading ? "Authorizing Identity..." : "Authorize Faculty Onboarding"}
+                  {loading ? "Creating..." : "Add Teacher"}
                 </button>
               </div>
             </form>
@@ -230,16 +230,16 @@ function TeacherDetail() {
         <div className="space-y-6">
           <div className="bg-primary/5 border border-primary/20 rounded-[2rem] p-6 space-y-4">
             <h3 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-2">
-              <ShieldAlert size={14} /> Privileged Access
+              <ShieldAlert size={14} /> Quick Note
             </h3>
             <p className="text-text-primary/70 text-sm leading-relaxed font-medium">
-              Faculty accounts are granted gradebook and attendance management privileges. Passwords should be reset upon first login.
+              Teacher accounts can manage grades and attendance. It's recommended to change the password after first login.
             </p>
           </div>
 
           <div className="bg-card/40 border border-border/20 rounded-[2rem] p-6 relative group overflow-hidden">
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors" />
-            <h3 className="text-text-muted font-black text-[10px] uppercase tracking-widest mb-4">Faculty Card Preview</h3>
+            <h3 className="text-text-muted font-black text-[10px] uppercase tracking-widest mb-4">Teacher Preview</h3>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
@@ -247,12 +247,12 @@ function TeacherDetail() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-black text-text-primary">{teacherName || "Name Pending"}</span>
-                  <span className="text-[10px] font-black text-primary/60 uppercase tracking-tighter">{teacherPost || "Post Unassigned"}</span>
+                  <span className="text-[10px] font-black text-primary/60 uppercase tracking-tighter">{teacherPost || "Position not set"}</span>
                 </div>
               </div>
               <div className="flex flex-col gap-2 pt-2 border-t border-border/10">
                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-tighter">
-                  <span className="text-text-muted">ID Code</span>
+                  <span className="text-text-muted">Teacher ID</span>
                   <span className="text-text-primary">{teacherId || "---"}</span>
                 </div>
                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-tighter">
