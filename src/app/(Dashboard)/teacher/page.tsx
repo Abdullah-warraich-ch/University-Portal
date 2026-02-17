@@ -1,10 +1,12 @@
 "use client";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FirebaseContext } from "@/app/Context";
 import Kpicard from "@/app/Components/teacher/Kpi-card";
 import CourseStudentCount from "@/app/Components/teacher/StudentCount";
 import Link from "next/link";
 import Heading from "@/app/Components/universal/Heading";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "@/app/Firebase";
 
 function Teacher() {
   const { courses, currentUser } = React.useContext(FirebaseContext)!;
@@ -12,14 +14,38 @@ function Teacher() {
     (course) => course.teacherUid === currentUser?.uid,
   );
 
-  console.log("Teacher's Courses:", userCourses); // Debugging line to check courses
+  const [courseStudentCounts, setCourseStudentCounts] = useState<
+    Record<string, number>
+  >({});
 
-  const totalStudents = userCourses.reduce((sum, course) => {
-    const students = Array.isArray(course.students)
-      ? course.students.length
-      : 0;
-    return sum + students;
-  }, 0);
+  const courseCodes = useMemo(
+    () =>
+      userCourses
+        .map((course) => String(course.code))
+        .filter((code) => code.length > 0),
+    [userCourses],
+  );
+
+  useEffect(() => {
+    const unsubscribers = courseCodes.map((code) => {
+      const studentsRef = collection(db, "courses", code, "students");
+      return onSnapshot(studentsRef, (snapshot) => {
+        setCourseStudentCounts((prev) => ({
+          ...prev,
+          [code]: snapshot.size,
+        }));
+      });
+    });
+
+    return () => {
+      unsubscribers.forEach((unsubscribe) => unsubscribe());
+    };
+  }, [courseCodes]);
+
+  const totalStudents = courseCodes.reduce(
+    (sum, code) => sum + (courseStudentCounts[code] ?? 0),
+    0,
+  );
 
   return (
     <div className="p-8 space-y-6">
