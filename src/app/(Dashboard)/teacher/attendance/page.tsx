@@ -8,7 +8,7 @@ import { db } from "@/app/Firebase";
 import CourseStudentCount from "@/app/Components/teacher/StudentCount";
 
 function Attendance() {
-  const { courses, currentUser, currentUserRecord } =
+  const { courses, currentUser } =
     React.useContext(FirebaseContext)!;
   const userCourses = courses.filter(
     (course) => course.teacherUid === currentUser?.uid,

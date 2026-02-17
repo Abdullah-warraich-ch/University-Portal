@@ -31,9 +31,7 @@ function UpcomingAssignments() {
 
           const DueDate = new Date(data.DueDate);
           const now = new Date();
-
-          // Strip the time so we are only comparing the calendar dates
-          now.setHours(0, 0, 0, 0);
+         now.setHours(0, 0, 0, 0);
 
           if (DueDate >= now) {
             allAssignments.push({
@@ -50,7 +48,7 @@ function UpcomingAssignments() {
 
     fetchAssignments();
   }, [enrolledCourses]);
-  if (assignments === null) return <p>Loading...</p>;
+  if (assignments === null) return <p className="mt-5">Loading...</p>;
   return (
     <>
       {assignments.length > 0 ? (

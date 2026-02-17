@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Book, LayoutDashboard } from "lucide-react";
+import { Book, ChevronDown, ChevronUp, LayoutDashboard } from "lucide-react";
 import { PiStudent } from "react-icons/pi";
 
 import { MdSettings } from "react-icons/md";
@@ -10,9 +10,27 @@ import { auth } from "@/app/Firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { FirebaseContext } from "@/app/Context";
-import React from "react";
+import React, { useState } from "react";
+import RegisteredCourses from "./RegisteredCourses";
 
 function Sidebar() {
+  const TeacherCourses = RegisteredCourses();
+
+  const [courseIsOpen, setCourseIsOpen] = useState(false);
+  const [attendanceIsOpen, setAttendanceIsOpen] = useState(false);
+  function handleCourseOpen() {
+    setCourseIsOpen((prev) => {
+      setAttendanceIsOpen(false);
+      return !prev;
+    });
+  }
+  function handleAttendanceOpen() {
+    setAttendanceIsOpen((prev) => {
+      setCourseIsOpen(false);
+      return !prev;
+    });
+  }
+
   const router = useRouter();
   const { currentUserRecord } = React.useContext(FirebaseContext)!;
   async function Logout() {
@@ -54,26 +72,60 @@ function Sidebar() {
         >
           <LayoutDashboard className="" size={20} /> Dashboard
         </Link>
-        <Link
-          href="/teacher/courses"
+        <button
+          onClick={handleCourseOpen}
           className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/teacher/courses"
+            pathname === "/student/courses"
               ? sactive
               : "text-text-muted hover:text-text-primary hover:bg-primary/5"
           }`}
         >
-          <Book className="" size={20} /> Courses
-        </Link>
-        <Link
-          href="/teacher/attendance"
+          <Book className="" size={20} />
+          <div className="flex justify-between w-full">
+            <span>Grades</span>
+            {courseIsOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </div>
+        </button>
+        {TeacherCourses.map((code, index) => {
+          return (
+            <Link
+              key={index}
+              href={`/teacher/courses/${code.id}`}
+              className={`flex items-center gap-3 rounded-lg px-2 ml-8 text-sm transition-colors ${courseIsOpen ? "" : "hidden"} duration-200 ease-in-out ${pathname === `/teacher/courses/${code.id}` ? sactive : "text-text-muted hover:text-text-primary hover:bg-primary/5"}`}
+            >
+              {code.id}
+            </Link>
+          );
+        })}
+        <button
+          onClick={handleAttendanceOpen}
           className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-            pathname === "/teacher/attendance"
+            pathname === "/student/attendance"
               ? sactive
               : "text-text-muted hover:text-text-primary hover:bg-primary/5"
           }`}
         >
-          <PiStudent className="" size={20} /> Attendance
-        </Link>
+          <Book className="" size={20} />
+          <div className="flex justify-between w-full">
+            <span>Attendance</span>
+            {attendanceIsOpen ? (
+              <ChevronUp size={20} />
+            ) : (
+              <ChevronDown size={20} />
+            )}
+          </div>
+        </button>
+        {TeacherCourses.map((code, index) => {
+          return (
+            <Link
+              key={index}
+              href={`/teacher/attendance/course/${code.id}`}
+              className={`flex items-center gap-3 rounded-lg px-2 ml-8 text-sm transition-colors ${attendanceIsOpen ? "" : "hidden"} duration-200 ease-in-out ${pathname === `/teacher/attendance/course/${code.id}` ? sactive : "text-text-muted hover:text-text-primary hover:bg-primary/5"}`}
+            >
+              {code.id}
+            </Link>
+          );
+        })}
 
         <Link
           href="/teacher/settings"

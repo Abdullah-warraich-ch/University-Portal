@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { Book, LayoutDashboard, ChevronUp, ChevronDown } from "lucide-react";
-import { MdSettings } from "react-icons/md";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { auth } from "@/app/Firebase";
@@ -127,17 +126,6 @@ function Sidebar() {
               </Link>
             );
           })}
-
-          <Link
-            href="/student/settings"
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-200 ease-in-out ${
-              pathname === "/teacher/settings"
-                ? sactive
-                : "text-text-muted hover:text-text-primary hover:bg-primary/5"
-            }`}
-          >
-            <MdSettings className="" size={20} /> Settings
-          </Link>
         </div>
       </div>
 
