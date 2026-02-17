@@ -1,13 +1,56 @@
 "use client";
 import React from "react";
 import { auth, db } from "@/app/Firebase";
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { getDocs, doc, collection, addDoc, setDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/app/Components/ui/spinner";
+import { ChevronLeft, UserPlus, Mail, Lock, User, Hash, Building, Sparkles, Phone, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+
+const FormInput = ({ label, icon: Icon, value, onChange, placeholder, type = "text" }: any) => (
+  <div className="space-y-2 group">
+    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted flex items-center gap-2 px-1 group-focus-within:text-primary transition-colors">
+      <Icon size={12} />
+      {label}
+    </label>
+    <div className="relative">
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="w-full bg-background-secondary/30 border border-border/50 rounded-2xl py-3.5 px-5 outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/50 transition-all font-semibold text-sm placeholder:text-text-muted/40"
+      />
+    </div>
+  </div>
+);
+
+const FormSelect = ({ label, icon: Icon, value, onChange, options, placeholder }: any) => (
+  <div className="space-y-2 group">
+    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted flex items-center gap-2 px-1 group-focus-within:text-primary transition-colors">
+      <Icon size={12} />
+      {label}
+    </label>
+    <div className="relative">
+      <select
+        value={value}
+        onChange={onChange}
+        className="w-full appearance-none bg-background-secondary/30 border border-border/50 rounded-2xl py-3.5 px-5 outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/50 transition-all font-semibold text-sm cursor-pointer"
+      >
+        <option value="" className="bg-background">{placeholder}</option>
+        {options.map((opt: any) => (
+          <option key={opt.value} value={opt.value} className="bg-background">
+            {opt.label}
+          </option>
+        ))}
+      </select>
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+        <ChevronLeft className="-rotate-90" size={16} />
+      </div>
+    </div>
+  </div>
+);
 
 function StudentDetail() {
   const [loading, setLoading] = React.useState(false);
@@ -20,8 +63,13 @@ function StudentDetail() {
   const [studentPhone, setStudentPhone] = React.useState("");
 
   const router = useRouter();
+
   async function CreateStudentCredentials(e: React.FormEvent) {
     e.preventDefault();
+    if (!studentEmail || !studentPassword || !studentName || !studentId) {
+      alert("Primary identification fields are required.");
+      return;
+    }
     setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -41,183 +89,191 @@ function StudentDetail() {
         phone: studentPhone,
         role: "student",
       });
-      console.log("Student account created:", user);
 
       router.push("/admin/students");
-      setLoading(false);
     } catch (error) {
       console.error("Error creating student account:", error);
       alert("Error creating student account. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary mb-4">
-        Add Student
-      </h1>
-      <form onSubmit={CreateStudentCredentials} className="space-y-4 ">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-text-muted mb-1"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={studentEmail}
-              onChange={(e) => setStudentEmail(e.target.value)}
-              className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-text-muted mb-1"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={studentPassword}
-              onChange={(e) => setStudentPassword(e.target.value)}
-              className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-text-muted mb-1"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={studentName}
-              onChange={(e) => setStudentName(e.target.value)}
-              className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="id"
-              className="block text-sm font-medium text-text-muted mb-1"
-            >
-              Student ID
-            </label>
-            <input
-              type="text"
-              id="id"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="department"
-              className="block text-sm font-medium text-text-muted mb-1"
-            >
-              Department
-            </label>
-            <select
-              value={studentDepartment}
-              onChange={(e) => setStudentDepartment(e.target.value)}
-              name="department"
-              id="department"
-              className="w-full p-2.5 border border-border rounded-lg focus:ring-primary focus:border-primary"
-            >
-              <option value="" className="bg-background">
-                Select Department
-              </option>
-              <option value="Computer Science" className="bg-background">
-                Computer Science
-              </option>
-              <option value="Mathematics" className="bg-background">
-                Mathematics
-              </option>
-              <option value="Physics" className="bg-background">
-                Physics
-              </option>
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="semester"
-              className="block text-sm font-medium text-text-muted mb-1"
-            >
-              Semester
-            </label>
-            <select
-              value={studentSemester}
-              onChange={(e) => setStudentSemester(e.target.value)}
-              name="semester"
-              id="semester"
-              className="w-full p-2.5 border border-border rounded-lg focus:ring-primary focus:border-primary"
-            >
-              <option value="" className="bg-background">
-                Select Semester
-              </option>
-              <option value="1st" className="bg-background">
-                1st Semester
-              </option>
-              <option value="2nd" className="bg-background">
-                2nd Semester
-              </option>
-              <option value="3rd" className="bg-background">
-                3rd Semester
-              </option>
-              <option value="4th" className="bg-background">
-                4th Semester
-              </option>
-              <option value="5th" className="bg-background">
-                5th Semester
-              </option>
-              <option value="6th" className="bg-background">
-                6th Semester
-              </option>
-              <option value="7th" className="bg-background">
-                7th Semester
-              </option>
-              <option value="8th" className="bg-background">
-                8th Semester
-              </option>
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="phone"
-              className="block text-sm font-medium text-text-muted mb-1"
-            >
-              Phone Number
-            </label>
-            <input
-              type="text"
-              id="phone"
-              value={studentPhone}
-              onChange={(e) => setStudentPhone(e.target.value)}
-              className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
-            />
+    <div className="p-4 md:p-8 space-y-8 max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <Link
+            href="/admin/students"
+            className="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors text-xs font-black uppercase tracking-widest mb-4 group"
+          >
+            <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+            Core Directory
+          </Link>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-lg shadow-primary/5">
+              <UserPlus size={24} />
+            </div>
+            <h1 className="text-3xl font-black tracking-tight text-text-primary">
+              Scholar Registration <span className="text-primary">.</span>
+            </h1>
           </div>
         </div>
-        <button
-          type="submit"
-          className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/90 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
-        >
-          {loading ? (
-            <span className="flex items-center gap-2">
-              <Spinner className="w-5 h-5" /> Creating Account
-            </span>
-          ) : (
-            "Create Student Account"
-          )}
-        </button>
-      </form>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left">
+        {/* Main Enrollment Form */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-card/40 backdrop-blur-xl border border-border/40 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+              <ShieldCheck size={120} />
+            </div>
+
+            <form onSubmit={CreateStudentCredentials} className="space-y-8 relative z-10">
+              <div className="space-y-6">
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Authentication Credentials</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormInput
+                    label="Academic Email"
+                    icon={Mail}
+                    value={studentEmail}
+                    onChange={(e: any) => setStudentEmail(e.target.value)}
+                    placeholder="student@university.edu"
+                    type="email"
+                  />
+                  <FormInput
+                    label="Secure Keypad"
+                    icon={Lock}
+                    value={studentPassword}
+                    onChange={(e: any) => setStudentPassword(e.target.value)}
+                    placeholder="••••••••"
+                    type="password"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Personal Identity</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormInput
+                    label="Legal Full Name"
+                    icon={User}
+                    value={studentName}
+                    onChange={(e: any) => setStudentName(e.target.value)}
+                    placeholder="Alexander Pierce"
+                  />
+                  <FormInput
+                    label="Institutional ID"
+                    icon={Hash}
+                    value={studentId}
+                    onChange={(e: any) => setStudentId(e.target.value)}
+                    placeholder="VU-2026-001"
+                  />
+                  <FormInput
+                    label="Direct Contact"
+                    icon={Phone}
+                    value={studentPhone}
+                    onChange={(e: any) => setStudentPhone(e.target.value)}
+                    placeholder="+92 3XX XXXXXXX"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-primary/10 pb-2">Academic Placement</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormSelect
+                    label="Department"
+                    icon={Building}
+                    value={studentDepartment}
+                    onChange={(e: any) => setStudentDepartment(e.target.value)}
+                    options={[
+                      { value: "Computer Science", label: "Computer Science" },
+                      { value: "Mathematics", label: "Mathematics" },
+                      { value: "Physics", label: "Physics" }
+                    ]}
+                    placeholder="Assigned Department"
+                  />
+                  <FormSelect
+                    label="Semester"
+                    icon={Sparkles}
+                    value={studentSemester}
+                    onChange={(e: any) => setStudentSemester(e.target.value)}
+                    options={[
+                      { value: "1st", label: "1st Semester" },
+                      { value: "2nd", label: "2nd Semester" },
+                      { value: "3rd", label: "3rd Semester" },
+                      { value: "4th", label: "4th Semester" },
+                      { value: "5th", label: "5th Semester" },
+                      { value: "6th", label: "6th Semester" },
+                      { value: "7th", label: "7th Semester" },
+                      { value: "8th", label: "8th Semester" }
+                    ]}
+                    placeholder="Active Semester"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-6 flex items-center gap-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 md:flex-none flex items-center justify-center gap-3 bg-primary text-white px-12 py-4 rounded-2xl font-black text-sm transition-all shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? <Spinner className="w-5 h-5 border-white" /> : <UserPlus size={18} />}
+                  {loading ? "Establishing Account..." : "Confirm Enrollment"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* Requirements Sidebar */}
+        <div className="space-y-6">
+          <div className="bg-primary/5 border border-primary/20 rounded-[2rem] p-6 space-y-4">
+            <h3 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-2">
+              <ShieldCheck size={14} /> Security Notice
+            </h3>
+            <p className="text-text-primary/70 text-sm leading-relaxed font-medium">
+              New student accounts are initialized with a student role. Credentials will be sent to the academic email provided.
+            </p>
+            <ul className="space-y-2 pt-2">
+              {['Unique University ID', 'Active Status', 'AES-256 Storage'].map((item, i) => (
+                <li key={i} className="flex items-center gap-2 text-[9px] font-black text-text-muted uppercase tracking-tighter">
+                  <div className="w-1 h-1 rounded-full bg-primary" /> {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-card/40 border border-border/20 rounded-[2rem] p-6 relative group overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors" />
+            <h3 className="text-text-muted font-black text-[10px] uppercase tracking-widest mb-4">Enrollment Live Feed</h3>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-background-secondary border border-border/50 flex items-center justify-center text-text-muted">
+                  <User size={18} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-black text-text-primary">{studentName || "Pending Name"}</span>
+                  <span className="text-[9px] font-bold text-text-muted uppercase tracking-tighter">{studentId || "ID Required"}</span>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2 pt-2 border-t border-border/10">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-tighter">
+                  <span className="text-text-muted">Department</span>
+                  <span className="text-primary">{studentDepartment || "---"}</span>
+                </div>
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-tighter">
+                  <span className="text-text-muted">Phase</span>
+                  <span className="text-primary">{studentSemester || "---"}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,210 +1,58 @@
-// "use client";
-// import React from "react";
-// import { auth, db } from "@/app/Firebase";
-// import { createUserWithEmailAndPassword } from "firebase/auth";
-// import { getDocs, doc, setDoc } from "firebase/firestore";
-// import { useRouter } from "next/navigation";
-// import { Spinner } from "@/components/ui/spinner";
-// import { FirebaseContext } from "@/app/Context";
-
-// function CourseDetail() {
-//   const [loading, setLoading] = React.useState(false);
-//   const [courseCode, setCourseCode] = React.useState("");
-//   const [courseName, setCourseName] = React.useState("");
-//   const [courseTeacher, setCourseTeacher] = React.useState("");
-//   const [courseDepartment, setCourseDepartment] = React.useState("");
-//   const [courseSemester, setCourseSemester] = React.useState("");
-//   const [teacherUid, setTeacherUid] = React.useState("");
-
-//   const { teachers } = React.useContext(FirebaseContext)!;
-
-//   const router = useRouter();
-//   async function CreateCourse(e: React.FormEvent) {
-//     e.preventDefault();
-//     setLoading(true);
-//     try {
-//       // Create course document in Firestore
-//       await setDoc(doc(db, "courses", courseCode), {
-//         code: courseCode,
-//         title: courseName,
-//         teacher: courseTeacher,
-//         teacherUid: teacherUid,
-//         department: courseDepartment,
-//         semester: courseSemester,
-//       });
-//       router.push("/admin/courses");
-//       setLoading(false);
-//     } catch (error) {
-//       console.error("Error creating course:", error);
-//       alert("Error creating course. Please try again.");
-//     }
-//   }
-//   return (
-//     <div className="p-8">
-//       <h1 className="text-2xl font-medium mb-4">Add Course</h1>
-//       <form onSubmit={CreateCourse} className="space-y-4 ">
-//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-//           <div>
-//             <label
-//               htmlFor="email"
-//               className="block text-sm font-medium text-text-muted mb-1"
-//             >
-//               Course Code
-//             </label>
-//             <input
-//               type="text"
-//               id="courseCode"
-//               value={courseCode}
-//               onChange={(e) => setCourseCode(e.target.value)}
-//               className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
-//             />
-//           </div>
-//           <div>
-//             <label
-//               htmlFor="password"
-//               className="block text-sm font-medium text-text-muted mb-1"
-//             >
-//               Course Name
-//             </label>
-//             <input
-//               type="text"
-//               id="courseName"
-//               value={courseName}
-//               onChange={(e) => setCourseName(e.target.value)}
-//               className="w-full p-2 border border-border rounded-lg focus:ring-primary focus:border-primary"
-//             />
-//           </div>
-//           <div>
-//             <label
-//               htmlFor="teacher"
-//               className="block text-sm font-medium text-text-muted mb-1"
-//             >
-//               Course Teacher
-//             </label>
-
-//             <select
-//               value={courseTeacher}
-//               onChange={(e) => setCourseTeacher(e.target.value)}
-//               name="teacher"
-//               id="teacher"
-//               className="w-full p-2.5 border border-border rounded-lg focus:ring-primary focus:border-primary"
-//             >
-//               <option value="" className="bg-background">
-//                 Select Teacher
-//               </option>
-//               {teachers.map((teacher) => (
-//                 <option
-//                   key={teacher.id}
-//                   value={teacher.name}
-//                   className="bg-background"
-//                 >
-//                   {teacher.name}
-//                   {setTeacherUid(teacher.uid)}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-//           <div>
-//             <label
-//               htmlFor="department"
-//               className="block text-sm font-medium text-text-muted mb-1"
-//             >
-//               Department
-//             </label>
-//             <select
-//               value={courseDepartment}
-//               onChange={(e) => setCourseDepartment(e.target.value)}
-//               name="department"
-//               id="department"
-//               className="w-full p-2.5 border border-border rounded-lg focus:ring-primary focus:border-primary"
-//             >
-//               <option value="" className="bg-background">
-//                 Select Department
-//               </option>
-//               <option value="Computer Science" className="bg-background">
-//                 Computer Science
-//               </option>
-//               <option value="Mathematics" className="bg-background">
-//                 Mathematics
-//               </option>
-//               <option value="Physics" className="bg-background">
-//                 Physics
-//               </option>
-//             </select>
-//           </div>
-//           <div>
-//             <label
-//               htmlFor="semester"
-//               className="block text-sm font-medium text-text-muted mb-1"
-//             >
-//               Semester
-//             </label>
-//             <select
-//               value={courseSemester}
-//               onChange={(e) => setCourseSemester(e.target.value)}
-//               name="semester"
-//               id="semester"
-//               className="w-full p-2.5 border border-border rounded-lg focus:ring-primary focus:border-primary"
-//             >
-//               <option value="" className="bg-background">
-//                 Select Semester
-//               </option>
-//               <option value="1st" className="bg-background">
-//                 1st Semester
-//               </option>
-//               <option value="2nd" className="bg-background">
-//                 2nd Semester
-//               </option>
-//               <option value="3rd" className="bg-background">
-//                 3rd Semester
-//               </option>
-//               <option value="4th" className="bg-background">
-//                 4th Semester
-//               </option>
-//               <option value="5th" className="bg-background">
-//                 5th Semester
-//               </option>
-//               <option value="6th" className="bg-background">
-//                 6th Semester
-//               </option>
-//               <option value="7th" className="bg-background">
-//                 7th Semester
-//               </option>
-//               <option value="8th" className="bg-background">
-//                 8th Semester
-//               </option>
-//             </select>
-//           </div>
-//         </div>
-//         <button
-//           type="submit"
-//           className="p-2 px-4 rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer"
-//         >
-//           {loading ? (
-//             <span className="flex items-center gap-2">
-//               <Spinner className="w-5 h-5" /> Creating Course
-//             </span>
-//           ) : (
-//             "Create Course"
-//           )}
-//         </button>
-//       </form>
-//     </div>
-//   );
-// }
-
-// export default CourseDetail;
-
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { db } from "@/app/Firebase";
-import { getDoc, doc, setDoc } from "firebase/firestore";
-import { useRouter, useParams } from "next/navigation";
+import { doc, setDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 import { Spinner } from "@/app/Components/ui/spinner";
 import { FirebaseContext } from "@/app/Context";
+import { ChevronLeft, Plus, Book, User, Building, Layers, Sparkles } from "lucide-react";
+import Link from "next/link";
 
-function EditCourseDetail() {
-  const { id } = useParams();
+const FormInput = ({ label, icon: Icon, value, onChange, placeholder, type = "text" }: any) => (
+  <div className="space-y-2 group">
+    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted flex items-center gap-2 px-1 group-focus-within:text-primary transition-colors">
+      <Icon size={12} />
+      {label}
+    </label>
+    <div className="relative">
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="w-full bg-background-secondary/30 border border-border/50 rounded-2xl py-3.5 px-5 outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/50 transition-all font-semibold text-sm placeholder:text-text-muted/40"
+      />
+    </div>
+  </div>
+);
+
+const FormSelect = ({ label, icon: Icon, value, onChange, options, placeholder }: any) => (
+  <div className="space-y-2 group">
+    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted flex items-center gap-2 px-1 group-focus-within:text-primary transition-colors">
+      <Icon size={12} />
+      {label}
+    </label>
+    <div className="relative">
+      <select
+        value={value}
+        onChange={onChange}
+        className="w-full appearance-none bg-background-secondary/30 border border-border/50 rounded-2xl py-3.5 px-5 outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/50 transition-all font-semibold text-sm cursor-pointer"
+      >
+        <option value="" className="bg-background">{placeholder}</option>
+        {options.map((opt: any) => (
+          <option key={opt.value} value={opt.value} className="bg-background">
+            {opt.label}
+          </option>
+        ))}
+      </select>
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+        <ChevronLeft className="-rotate-90" size={16} />
+      </div>
+    </div>
+  </div>
+);
+
+function CreateCourse() {
   const [loading, setLoading] = React.useState(false);
   const [courseCode, setCourseCode] = React.useState("");
   const [courseName, setCourseName] = React.useState("");
@@ -216,126 +64,181 @@ function EditCourseDetail() {
   const { teachers } = React.useContext(FirebaseContext)!;
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchCourseData = async () => {
-      const CourseDoc = await getDoc(doc(db, "courses", id as string));
-      if (CourseDoc.exists()) {
-        const data = CourseDoc.data();
-        setCourseCode(data.code);
-        setCourseName(data.title);
-        setCourseTeacher(data.teacher);
-        setCourseDepartment(data.department);
-        setCourseSemester(data.semester);
-        setTeacherUid(data.teacherUid);
-      }
-    };
-    fetchCourseData();
-  }, [id]);
-
-  async function updateCourseDetails(e: React.FormEvent) {
+  async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
+    if (!courseCode || !courseName || !teacherUid) {
+      alert("Please fill in all required fields.");
+      return;
+    }
     setLoading(true);
     try {
-      await setDoc(doc(db, "courses", id as string), {
+      await setDoc(doc(db, "courses", courseCode), {
         code: courseCode,
         title: courseName,
         teacher: courseTeacher,
+        teacherUid: teacherUid,
         department: courseDepartment,
         semester: courseSemester,
-        teacherUid: teacherUid,
+        students: []
       });
       router.push("/admin/courses");
     } catch (error) {
-      console.error("Error updating course:", error);
-      alert("Error updating course.");
+      console.error("Error creating course:", error);
+      alert("Error creating course. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary mb-4">
-        Edit Course
-      </h1>
-
-      <form onSubmit={updateCourseDetails} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <input
-            value={courseCode}
-            onChange={(e) => setCourseCode(e.target.value)}
-            placeholder="Course Code"
-            className="border p-2 rounded"
-          />
-
-          <input
-            value={courseName}
-            onChange={(e) => setCourseName(e.target.value)}
-            placeholder="Course Name"
-            className="border p-2 rounded"
-          />
-
-          <select
-            value={teacherUid}
-            onChange={(e) => {
-              const uid = e.target.value;
-              const teacher = teachers.find((t) => t.uid === uid);
-              setTeacherUid(uid);
-              setCourseTeacher(teacher?.name || "");
-            }}
-            className="border p-2 rounded"
+    <div className="p-4 md:p-8 space-y-8 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <Link
+            href="/admin/courses"
+            className="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors text-xs font-black uppercase tracking-widest mb-4 group"
           >
-            <option value="">Select Teacher</option>
-            {teachers.map((teacher) => (
-              <option key={teacher.id} value={teacher.uid}>
-                {teacher.name}
-              </option>
-            ))}
-          </select>
+            <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+            Back to Registry
+          </Link>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-lg shadow-primary/5">
+              <Plus size={24} />
+            </div>
+            <h1 className="text-3xl font-black tracking-tight text-text-primary">
+              New Course Registry <span className="text-primary">.</span>
+            </h1>
+          </div>
+        </div>
+      </div>
 
-          <select
-            value={courseDepartment}
-            onChange={(e) => setCourseDepartment(e.target.value)}
-            className="border p-2 rounded"
-          >
-            <option value="">Select Department</option>
-            <option value="Computer Science">Computer Science</option>
-            <option value="Mathematics">Mathematics</option>
-            <option value="Physics">Physics</option>
-          </select>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Form */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-card/40 backdrop-blur-xl border border-border/40 rounded-[2.5rem] p-8 shadow-2xl">
+            <form onSubmit={handleCreate} className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormInput
+                  label="Course Identity Code"
+                  icon={Layers}
+                  value={courseCode}
+                  onChange={(e: any) => setCourseCode(e.target.value)}
+                  placeholder="e.g. CS-101"
+                />
+                <FormInput
+                  label="Course Module Title"
+                  icon={Book}
+                  value={courseName}
+                  onChange={(e: any) => setCourseName(e.target.value)}
+                  placeholder="Intro to Architecture"
+                />
 
-          <select
-            value={courseSemester}
-            onChange={(e) => setCourseSemester(e.target.value)}
-            className="border p-2 rounded"
-          >
-            <option value="">Select Semester</option>
-            <option value="1st">1st</option>
-            <option value="2nd">2nd</option>
-            <option value="3rd">3rd</option>
-            <option value="4th">4th</option>
-            <option value="5th">5th</option>
-            <option value="6th">6th</option>
-            <option value="7th">7th</option>
-            <option value="8th">8th</option>
-          </select>
+                <FormSelect
+                  label="Assign Faculty"
+                  icon={User}
+                  value={teacherUid}
+                  onChange={(e: any) => {
+                    const uid = e.target.value;
+                    const teacher = teachers.find((t: any) => t.uid === uid);
+                    setTeacherUid(uid);
+                    setCourseTeacher(teacher?.name || "");
+                  }}
+                  options={teachers.map((t: any) => ({ value: t.uid, label: t.name }))}
+                  placeholder="Select Professor"
+                />
+
+                <FormSelect
+                  label="Academic Department"
+                  icon={Building}
+                  value={courseDepartment}
+                  onChange={(e: any) => setCourseDepartment(e.target.value)}
+                  options={[
+                    { value: "Computer Science", label: "Computer Science" },
+                    { value: "Mathematics", label: "Mathematics" },
+                    { value: "Physics", label: "Physics" }
+                  ]}
+                  placeholder="Select Department"
+                />
+
+                <FormSelect
+                  label="Semester Assigned"
+                  icon={Sparkles}
+                  value={courseSemester}
+                  onChange={(e: any) => setCourseSemester(e.target.value)}
+                  options={[
+                    { value: "1st", label: "1st Semester" },
+                    { value: "2nd", label: "2nd Semester" },
+                    { value: "3rd", label: "3rd Semester" },
+                    { value: "4th", label: "4th Semester" },
+                    { value: "5th", label: "5th Semester" },
+                    { value: "6th", label: "6th Semester" },
+                    { value: "7th", label: "7th Semester" },
+                    { value: "8th", label: "8th Semester" }
+                  ]}
+                  placeholder="Target Semester"
+                />
+              </div>
+
+              <div className="pt-4 flex items-center gap-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 md:flex-none flex items-center justify-center gap-3 bg-primary text-white px-10 py-4 rounded-2xl font-black text-sm transition-all shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? <Spinner className="w-5 h-5 border-white" /> : <Plus size={18} />}
+                  {loading ? "Initializing..." : "Register Course"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.back()}
+                  className="hidden md:block px-10 py-4 rounded-2xl border border-border/50 text-text-muted font-bold text-sm tracking-widest hover:text-text-primary hover:bg-background-secondary/50 transition-all"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
 
-        <button
-          type="submit"
-          className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/90 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary/40"
-        >
-          {loading ? (
-            <span className="flex items-center gap-2">
-              <Spinner className="w-5 h-5" /> Updating
-            </span>
-          ) : (
-            "Update"
-          )}
-        </button>
-      </form>
+        {/* Info Sidebar */}
+        <div className="space-y-6">
+          <div className="bg-primary/5 border border-primary/20 rounded-[2rem] p-6 space-y-4">
+            <h3 className="text-primary font-black text-xs uppercase tracking-widest flex items-center gap-2">
+              <Sparkles size={14} /> Creation Guide
+            </h3>
+            <p className="text-text-primary/70 text-sm leading-relaxed font-medium">
+              Ensure the Course Code is unique and follows the university format. This code will be used as the primary identifier.
+            </p>
+            <div className="pt-2">
+              <div className="flex items-center gap-3 text-[10px] font-black text-text-muted uppercase tracking-tighter">
+                <div className="w-1.5 h-1.5 rounded-full bg-warning" /> Requires Validation
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-card/40 border border-border/20 rounded-[2rem] p-6 overflow-hidden relative group">
+            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
+            <h3 className="text-text-muted font-black text-[10px] uppercase tracking-widest mb-4">Module Summary</h3>
+            <div className="space-y-3">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-bold text-text-muted uppercase">Identity</span>
+                <span className="text-sm font-black text-text-primary">{courseCode || "Not set"}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-bold text-text-muted uppercase">Title</span>
+                <span className="text-sm font-black text-text-primary">{courseName || "Untitled"}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-bold text-text-muted uppercase">Department</span>
+                <span className="text-sm font-black text-text-primary">{courseDepartment || "Pending..."}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default EditCourseDetail;
+export default CreateCourse;

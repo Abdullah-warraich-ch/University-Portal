@@ -47,36 +47,22 @@ body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
 }
+
 input:-webkit-autofill {
-  box-shadow: 0 0 0 1000px #020617 inset !important; /* your input bg */
-  -webkit-text-fill-color: white !important; /* your text color */
+  box-shadow: 0 0 0 1000px #020617 inset !important;
+  /* your input bg */
+  -webkit-text-fill-color: white !important;
+  /* your text color */
 }
+
 input:-webkit-autofill::first-line {
   font-family: var(--font-poppins);
 }
 
 @layer utilities {
   .gradient-primary {
-    background: linear-gradient(
-      135deg,
-      var(--color-primary),
-      var(--color-secondary)
-    );
-  }
-
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--color-border);
-    border-radius: 10px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--color-primary);
+    background: linear-gradient(135deg,
+        var(--color-primary),
+        var(--color-secondary));
   }
 }
-
