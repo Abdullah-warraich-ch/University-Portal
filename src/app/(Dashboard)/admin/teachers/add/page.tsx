@@ -174,7 +174,7 @@ function TeacherDetail() {
                     icon={Phone}
                     value={teacherPhone}
                     onChange={(e: any) => setTeacherPhone(e.target.value)}
-                    placeholder="+91 XXXXXXXXXX"
+                    placeholder="0312 3478587"
                   />
                 </div>
               </div>

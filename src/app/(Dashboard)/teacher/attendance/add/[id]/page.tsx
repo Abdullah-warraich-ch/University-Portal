@@ -185,7 +185,7 @@ function Add() {
                             </div>
                             <div className="flex flex-col">
                               <span className={`font-bold transition-colors ${isPresent ? 'text-primary' : 'text-text-primary'}`}>{student.name}</span>
-                              <span className="text-[10px] font-black text-text-muted uppercase tracking-tighter opacity-70">UID: {student.uid.slice(-6)}</span>
+                              {/* <span className="text-[10px] font-black text-text-muted uppercase tracking-tighter opacity-70">UID: {student.uid.slice(-6)}</span> */}
                             </div>
                           </div>
                         </td>
@@ -245,7 +245,7 @@ function Add() {
                 <div className="h-px bg-border/20" />
                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">
                   <span>Visibility</span>
-                  <span className="text-text-primary">Publicly Visible</span>
+                  <span className="text-text-primary text-right !text-xs">Publicly Visible</span>
                 </div>
               </div>
             </div>
